@@ -27,25 +27,32 @@
 
   /* Header Styles */
   #header {
-   height: 15vh;
+   height: auto;
+   /* Changed from 15vh */
    background-color: #008080;
    /* Teal Header */
    display: flex;
    justify-content: space-around;
    align-items: center;
-   padding: 0 1.25em;
+   padding: 0.625em 1.25em;
+   /* Consistent padding */
    box-shadow: 0 0.125em 0.3125em rgba(0, 0, 0, 0.2);
    /* Darker shadow for contrast */
    color: white;
    /* White text for header */
+   flex-wrap: wrap;
+   /* Allow items to wrap */
   }
 
   #header>div {
    text-align: center;
+   margin: 0.3125em;
+   /* Add some margin for spacing */
   }
 
   .header-btn {
-   padding: 0.625em 1.25em;
+   padding: 0.5em 1em;
+   /* Adjusted padding */
    background-color: #26a69a;
    /* A lighter shade of teal */
    color: white;
@@ -54,6 +61,8 @@
    cursor: pointer;
    margin: 0 0.3125em;
    transition: background-color 0.3s ease;
+   font-size: 0.8em;
+   /* Smaller font size */
   }
 
   .header-btn:hover {
@@ -63,10 +72,14 @@
 
   /* Content Styles */
   #content {
-   height: 70vh;
+   height: auto;
+   /* Changed from 70vh */
+   flex-grow: 1;
+   /* Take up remaining space */
    padding: 0.3125em;
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+   /* Adjusted minmax */
    /* Responsive columns */
    gap: 0.625em;
    overflow-y: auto;
@@ -77,7 +90,8 @@
    /* Light teal for court boxes */
    padding: 0.625em;
    border-radius: 0.3125em;
-   min-height: 10em;
+   min-height: 8em;
+   /* Reduced min-height */
    box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.2);
    /* Darker shadow for depth */
    border: 1px solid #80cbc4;
@@ -93,16 +107,20 @@
   }
 
   .court-box h3 {
-   font-size: 1.75em;
+   font-size: 1.3em;
+   /* Reduced font size */
    margin-bottom: 0.625em;
    color: #004d40;
    /* Dark teal for titles */
   }
 
   .player-name {
-   margin: 0.5em 0;
-   padding: 0.5em;
-   font-size: 2em;
+   margin: 0.25em 0;
+   /* Reduced margin */
+   padding: 0.25em;
+   /* Reduced padding */
+   font-size: 1em;
+   /* Reduced font size */
    border-bottom: 1px solid #4db6ac;
    /* Lighter teal for player names */
    color: #000;
@@ -112,14 +130,16 @@
   #rested-players {
    background-color: #008080;
    /* Teal for rested players section */
-   padding: 0.9375em 1.25em;
+   padding: 0.625em 1.25em;
+   /* Reduced padding */
    box-shadow: 0 -0.125em 0.625em rgba(0, 0, 0, 0.2);
    /* Increased shadow */
    position: fixed;
    bottom: 0;
    left: 0;
    right: 0;
-   min-height: 10vh;
+   min-height: auto;
+   /*Let the content decide the height */
    max-height: 20vh;
    overflow-y: auto;
    display: flex;
@@ -133,7 +153,8 @@
 
   #rested-players h3 {
    color: #fff;
-   font-size: 1.2em;
+   font-size: 1em;
+   /* Reduced font size */
    margin-bottom: 0.3125em;
    text-align: center;
   }
@@ -149,7 +170,8 @@
   .rested-player {
    background: #26a69a;
    /* Lighter teal */
-   padding: 0.5em 0.75em;
+   padding: 0.3em 0.5em;
+   /* Smaller padding */
    border-radius: 0.3125em;
    border: 1px solid #009688;
    /* Darker teal border */
@@ -160,31 +182,37 @@
    max-width: 9.375em;
    color: #fff;
    /* Light text */
-   font-size: 0.75em;
+   font-size: 0.6em;
+   /* Reduced font size */
   }
 
   /* Timer and Input Styles */
   #timer {
    color: white;
-   font-size: 2.2em;
+   font-size: 1.8em;
+   /* Reduced font size */
    font-weight: 600;
   }
 
   #session-number {
    color: white;
-   font-size: 1.4em;
+   font-size: 1.1em;
+   /* Reduced font size */
    font-weight: 500;
   }
 
   #duration-input {
-   width: 3.75em;
-   padding: 0.5em;
+   width: 3em;
+   /* Adjusted width */
+   padding: 0.3em;
+   /* Adjusted padding */
    border-radius: 0.3125em;
    border: 1px solid #4db6ac;
    /* Teal border */
    text-align: center;
    margin-left: 0.3125em;
-   font-size: 0.75em;
+   font-size: 0.6em;
+   /* Reduced font size */
   }
 
   /* Styles for player name colors */
@@ -213,30 +241,85 @@
   }
 
   /* Media Queries for Responsiveness */
-  /*Target smaller tablets (6-inch) */
-  @media screen and (max-width: 600px) {
+  /*Target smaller tablets (6-inch) in LANDSCAPE */
+  @media screen and (max-width: 600px) and (orientation: landscape) {
    #header {
-    flex-direction: column;
-    height: auto;
-    padding: 0.625em;
+    flex-direction: row;
+    /* Or keep column, experiment! */
+    padding: 0.3em;
    }
 
    #header>div {
-    margin: 0.3125em 0;
+    margin: 0.15em 0;
    }
 
    .header-btn {
-    padding: 0.375em 0.75em;
+    padding: 0.3em 0.6em;
+    font-size: 0.6em;
+   }
+
+   #content {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    /* More columns */
+   }
+
+   .court-box {
+    min-height: 6em;
+    padding: 0.3em;
+   }
+
+   .court-box h3 {
+    font-size: 1em;
+   }
+
+   .player-name {
+    font-size: 0.9em;
+    margin: 0.1em 0;
+    padding: 0.1em;
+   }
+
+   #timer {
+    font-size: 1.4em;
+   }
+
+   #session-number {
+    font-size: 0.8em;
+   }
+
+   #rested-players {
+    padding: 0.4em;
+   }
+
+   .rested-player {
+    font-size: 0.5em;
+   }
+  }
+
+  /*Target larger tablets (7-inch) in LANDSCAPE */
+  @media screen and (min-width: 601px) and (max-width: 768px) and (orientation: landscape) {
+   #header {
+    flex-direction: row;
+    /* Or keep column, experiment! */
+    padding: 0.5em;
+   }
+
+   #header>div {
+    margin: 0.25em 0;
+   }
+
+   .header-btn {
+    padding: 0.4em 0.8em;
     font-size: 0.7em;
    }
 
    #content {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* More columns */
    }
 
    .court-box {
-    min-height: 7.5em;
-    padding: 0.375em;
+    min-height: 7em;
+    padding: 0.4em;
    }
 
    .court-box h3 {
@@ -245,62 +328,74 @@
 
    .player-name {
     font-size: 1em;
-    margin: 0.25em 0;
-    padding: 0.25em;
+    margin: 0.2em 0;
+    padding: 0.2em;
    }
 
    #timer {
-    font-size: 1.6em;
+    font-size: 1.7em;
    }
 
    #session-number {
-    font-size: 0.9em;
-   }
-  }
-
-  /*Target larger tablets (7-inch) */
-  @media screen and (min-width: 601px) and (max-width: 768px) {
-   #header {
-    flex-direction: column;
-    height: auto;
-    padding: 0.9375em;
+    font-size: 1em;
    }
 
-   #header>div {
-    margin: 0.5em 0;
-   }
-
-   .header-btn {
-    padding: 0.5em 1em;
-    font-size: 0.8em;
-   }
-
-   #content {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-   }
-
-   .court-box {
-    min-height: 8.75em;
+   #rested-players {
     padding: 0.5em;
    }
 
-   .court-box h3 {
-    font-size: 1.3em;
+   .rested-player {
+    font-size: 0.6em;
    }
+  }
 
-   .player-name {
-    font-size: 1.1em;
-    margin: 0.3125em 0;
-    padding: 0.3125em;
-   }
+  /* Settings Dropdown Styles */
+  .settings-container {
+   position: relative;
+   /* Important for dropdown positioning */
+   display: inline-block;
+  }
 
-   #timer {
-    font-size: 1.9em;
-   }
+  .settings-icon {
+   font-size: 1.5em;
+   /* Adjust icon size as needed */
+   padding: 0.5em;
+   /* Add padding for better appearance */
+   background: none;
+   /* Remove default button background */
+   border: none;
+   /* Remove default button border */
+   cursor: pointer;
+   color: white;
+  }
 
-   #session-number {
-    font-size: 1.1em;
-   }
+  .settings-dropdown {
+   display: none;
+   position: absolute;
+   background-color: #f9f9f9;
+   /* Light background for the dropdown */
+   min-width: 160px;
+   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+   z-index: 1;
+   right: 0;
+   /* Position dropdown to the right */
+   flex-direction: column;
+   /* Stack buttons vertically */
+   padding: 0.5em;
+   border-radius: 0.3125em;
+  }
+
+  .settings-dropdown button {
+   display: block;
+   /* Make buttons fill the width of the dropdown */
+   width: 100%;
+   text-align: left;
+   margin: 0.25em 0;
+  }
+
+  /* Show the dropdown when the settings container has class of show */
+  .settings-dropdown.show {
+   display: flex;
   }
   </style>
  </head>
@@ -312,15 +407,22 @@
    <div>
     Session Duration: <input type="number" id="duration-input"> minutes
    </div>
-   <div>
-    <button class="header-btn">Pause</button>
-    <button class="header-btn" id="reset-btn">Reset</button>
-    <button class="header-btn" id="next-btn">Next</button>
-    <button class="header-btn" id="prev-btn">Prev</button>
-    <button class="header-btn">Config</button>
-    <button class="header-btn">Help</button>
-    <button class="header-btn">Info</button>
+
+   <!-- Settings Dropdown -->
+   <div class="settings-container">
+    <button class="header-btn settings-icon">&#9881;</button>
+    <!-- Settings Icon (Gear) -->
+    <div class="settings-dropdown">
+     <button class="header-btn pause-btn">Pause</button>
+     <button class="header-btn" id="reset-btn">Reset</button>
+     <button class="header-btn" id="next-btn">Next</button>
+     <button class="header-btn" id="prev-btn">Prev</button>
+     <button class="header-btn">Config</button>
+     <button class="header-btn">Help</button>
+     <button class="header-btn">Info</button>
+    </div>
    </div>
+   <!-- End Settings Dropdown -->
   </div>
 
   <div id="content"></div>
@@ -336,6 +438,7 @@
   let totalSeconds;
   let sessionDuration;
   let isFullscreen = false; // Track fullscreen state
+  let isPaused = false; // Track the pause state
 
   function initialize() {
    // Keep screen on
@@ -377,6 +480,23 @@
 
    // Add double-click listener to toggle fullscreen
    document.addEventListener('dblclick', toggleFullscreen);
+
+   // Settings Dropdown functionality
+   document.querySelector('.settings-icon').addEventListener('click', function() {
+    document.querySelector('.settings-dropdown').classList.toggle('show');
+   });
+
+   document.querySelector('.pause-btn').addEventListener('click', function() {
+    isPaused = !isPaused; // Toggle the pause state
+
+    if (isPaused) {
+     clearInterval(timerInterval); // Stop the timer
+     this.textContent = "Resume"; // Change button text
+    } else {
+     startCountdown(); // Resume the timer
+     this.textContent = "Pause"; // Change button text back
+    }
+   });
   }
 
   function hideAddressBar() {
@@ -572,8 +692,8 @@
   function playBeeps(duration) {
    for (let i = 0; i < 10; i++) {
     setTimeout(() => {
-     playBeep(duration);
-    }, i * 600);
+     playBeep(200); // Shorten beep duration to 200ms
+    }, i * 300); // Reduce delay to 300ms to create distinct beeps
    }
   }
 

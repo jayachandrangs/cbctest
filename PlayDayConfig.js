@@ -41,6 +41,7 @@ function toggleCourt(court, courtName) {
             ncourts++;
         }
     }
+
     PlayDayConfig.courts = selectedCourts;
     PlayDayConfig.ncourts = ncourts;
     sortCourts();
@@ -59,12 +60,12 @@ async function commitChanges() {
     localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
 
     const csvUrl = "https://raw.githubusercontent.com/jayachandrangs/CityWestBadmintionClub/6a117a74bb794f7706f8921fff50aa0196bda5fa/docs/RiVi_playerlist.csv";
-
     try {
         const response = await fetch(csvUrl);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const csvData = await response.text();
         processCSVData(csvData);
     } catch (error) {
@@ -80,7 +81,6 @@ async function commitChanges() {
 function processCSVData(csvData) {
     localStorage.removeItem('clubmembers');
     localStorage.removeItem('PlayingToday');
-
     const rows = csvData.split('\n');
     if (rows.length < 2) {
         alert('The CSV file does not contain valid data.');
@@ -169,7 +169,6 @@ function sortCourts() {
 
 document.addEventListener('DOMContentLoaded', function() {
     loadValuesFromLocalStorage();
-
     const courts = document.querySelectorAll('.court');
     courts.forEach(court => {
         court.addEventListener('click', function() {
@@ -197,14 +196,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const commitButton = document.getElementById('commit');
     commitButton.addEventListener('click', commitChanges);
 
-    ncourts = courts.length;
-    selectedCourts = Array.from(courts)
-        .filter(court => court.classList.contains('selected'))
-        .map(court => court.textContent);
-    PlayDayConfig.courts = selectedCourts;
-    PlayDayConfig.ncourts = ncourts;
-    sortCourts();
-    updateConfig();
+    // Initialize ncourts and selectedCourts based on the DOM
+    ncourts = PlayDayConfig.courts.length; // Initialize ncourts from PlayDayConfig
+    selectedCourts = PlayDayConfig.courts; // Initialize selectedCourts from PlayDayConfig
+    updateConfig(); // Save initial values to localStorage
+
 });
 
 function updateConfig() {

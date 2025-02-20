@@ -1,0 +1,393 @@
+localstorage PlayDayConfig has the following information.
+	ncourts
+	nsession
+	S1-S10 (Has session allocation method)
+	courts (Has the court names) (#Parameter4, this is for ref)
+
+
+Create the following.
+
+Function : PlayerAllocation 
+Session SessionID = 1
+until SessionID > localStorage.getItem("PlayDayDConfig")).nsession
+do
+  if PlayDayConfig.S($SessionID) = Basic1
+	Then call Function Basic1(SessionID) (Pass this parameter SessionID to function Basic1)
+	  if else PlayDayConfig.S(SessionID) = Basic2
+		Then call Function Basic2(SessionID) (Pass this parameter SessionID to function Basic2)
+		 	  if else PlayDayConfig.S(SessionID) = Basic3
+		        Then call Function Basic3(SessionID) (Pass this parameter SessionID to function Basic3)
+					 if else PlayDayConfig.S(SessionID) = Basic4
+		               Then call Function Basic4(SessionID) (Pass this parameter SessionID to function Basic4)
+     					 if else PlayDayConfig.S(SessionID) = Mixed1
+							Then call Function Mixed1(SessionID) (Pass this parameter SessionID to function Mixed1)
+								if else PlayDayConfig.S(SessionID) = Mixed2
+									Then call Function Mixed2(SessionID) (Pass this parameter SessionID to function Mixed2)
+										if else PlayDayConfig.S(SessionID) = Mixed3
+											Then call Function Mixed3(SessionID) (Pass this parameter SessionID to function Mixed3)
+												if else PlayDayConfig.S(SessionID) = Mixed4
+													Then call Function Mixed4(SessionID) (Pass this parameter SessionID to function Mixed4)
+  SessionID = SessionID + 1
+done
+
+Notificaiton "Have a nice day!"
+
+Function Basic1
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = count the number of players in localstorage(PlayingToday)
+   courtbasedonplayer = PlayDayConfig.nplayers/4 (take the first digit of this output)
+   actualcourts = (if PlayDayConfig.ncourts > courtbasedonplayer, then courtbasedonplayer, else PlayDayConfig.ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter
+				1.1 descending order based on played parameter
+						1.1.1 descending order based on number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done
+
+Function Basic2
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = number of players in localstorage(PlayingToday)
+   courtbasedonplayer = nplayers/4 (take the first digit of this output)
+   actualcourts = (if ncourts > courtbasedonplayer, then courtbasedonplayer, else ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter
+				1.1 descending order based on played parameter
+						1.1.1 descending order based on number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select lowest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select lowest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select lowest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select lowest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done
+				
+Function Basic3
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = number of players in localstorage(PlayingToday)
+   courtbasedonplayer = nplayers/4 (take the first digit of this output)
+   actualcourts = (if ncourts > courtbasedonplayer, then courtbasedonplayer, else ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter
+				1.1 descending order based on played parameter
+						1.1.1 descending order based on number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done
+
+Function Basic4
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = number of players in localstorage(PlayingToday)
+   courtbasedonplayer = nplayers/4 (take the first digit of this output)
+   actualcourts = (if ncourts > courtbasedonplayer, then courtbasedonplayer, else ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter
+				1.1 descending order based on played parameter
+						1.1.1 descending order based on number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select lowest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select lowest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select lowest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select lowest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done
+
+Function MixedDiv1
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = number of players in localstorage(PlayingToday)
+   courtbasedonplayer = nplayers/4 (take the first digit of this output)
+   actualcourts = (if ncourts > courtbasedonplayer, then courtbasedonplayer, else ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter under the player number
+				1.1 descending order based on rested parameter under the player number
+						1.1.1 descending order based on number parameter under the player number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select player whoes primary_division is 1.5 less than S(SessionID).C(COURTID).Player1, 
+														else whoes primary_division is 1 less than S(SessionID).C(COURTID).Player1,  
+														else whoes primary_divison is 0.5 than S(SessionID).C(COURTID).Player1 
+														else highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select player whoes primary_division is 1.5 less than S(SessionID).C(COURTID).Player2, 
+														else whoes primary_division is 1 less than S(SessionID).C(COURTID).Player2,  
+														else whoes primary_divison is 0.5 less than S(SessionID).C(COURTID).Player2 
+														else highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done
+
+Function MixedDiv2
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = number of players in localstorage(PlayingToday)
+   courtbasedonplayer = nplayers/4 (take the first digit of this output)
+   actualcourts = (if ncourts > courtbasedonplayer, then courtbasedonplayer, else ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter
+				1.1 descending order based on played parameter
+						1.1.1 descending order based on number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select lowest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select lowest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select player whoes primary_division is 1.5 higher than S(SessionID).C(COURTID).Player1, 
+														else whoes primary_division is 1 higher than S(SessionID).C(COURTID).Player1,  
+														else whoes primary_divison is 0.5 higher than S(SessionID).C(COURTID).Player1 
+														else highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select player whoes primary_division is 1.5 higher than S(SessionID).C(COURTID).Player2, 
+														else whoes primary_division is 1 higher than S(SessionID).C(COURTID).Player2,  
+														else whoes primary_divison is 0.5 higher than S(SessionID).C(COURTID).Player2 
+														else highest primary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done
+				
+Function MixedDiv3
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = number of players in localstorage(PlayingToday)
+   courtbasedonplayer = nplayers/4 (take the first digit of this output)
+   actualcourts = (if ncourts > courtbasedonplayer, then courtbasedonplayer, else ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter
+				1.1 descending order based on played parameter
+						1.1.1 descending order based on number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select player whoes secondary_divison is 1.5 less than S(SessionID).C(COURTID).Player1, 
+														else whoes secondary_divison is 1 less than S(SessionID).C(COURTID).Player1,  
+														else whoes secondary_divison is 0.5 than S(SessionID).C(COURTID).Player1 
+														else highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select player whoes secondary_divison is 1.5 less than S(SessionID).C(COURTID).Player2, 
+														else whoes secondary_divison is 1 less than S(SessionID).C(COURTID).Player2,  
+														else whoes secondary_divison is 0.5 less than S(SessionID).C(COURTID).Player2 
+														else highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done
+
+Function MixedDiv4
+   set alloted = 0 to all the players in PlayingToday
+   nplayers = number of players in localstorage(PlayingToday)
+   courtbasedonplayer = nplayers/4 (take the first digit of this output)
+   actualcourts = (if ncourts > courtbasedonplayer, then courtbasedonplayer, else ncourts )
+   playing = actualcourts * 4 
+   resting = nplayers - playing
+   sorting the localstorage(PlayingToday)
+		1. ascending order based on rested parameter
+				1.1 descending order based on played parameter
+						1.1.1 descending order based on number
+	Deciding and recodring the rested players. (RP1 = Resting Player 1, RP2 = Resting Player 2)
+		repeat this for value of "resting" times
+				RPID = 1  
+				Until RPID > resting
+					do 
+						The RPID line in sorted localstorage (PlayingToday)
+						RP(RPID).name = playername
+						RP(RPID)(1=select the first player in the localstorage(PlayingToday), change "alloted" = 2, rested = rested +1,
+						RPID = RPID + 1
+					done
+				Store "Rested Player" = All RPID.name in localstorage (Session_SessionID)
+	Deciding and recording the players for all courts
+		COURTID = 1,
+			until COURTID > actualcourts
+				do
+					S(SessionID).C(COURTID).Player1 = select lowest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player2 = select lowest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player3 = select player whoes secondary_divison is 1.5 higher than S(SessionID).C(COURTID).Player1, 
+														else whoes secondary_divison is 1 higher than S(SessionID).C(COURTID).Player1,  
+														else whoes secondary_divison is 0.5 higher than S(SessionID).C(COURTID).Player1 
+														else highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+					S(SessionID).C(COURTID).Player4 = select player whoes secondary_divison is 1.5 higher than S(SessionID).C(COURTID).Player2, 
+														else whoes secondary_divison is 1 higher than S(SessionID).C(COURTID).Player2,  
+														else whoes secondary_divison is 0.5 higher than S(SessionID).C(COURTID).Player2 
+														else highest secondary_divison player from the localstorage (Playingtoday) whoes alloted = 0, set his alloted = 1. Also increase his played = played + 1
+				COURTID = COURTID +1
+				done
+				Store all S(SessionID).C(COURTID).Player to local storage (Session_SessionID) 
+				print "Session : SessionID"
+				COURTID = 1
+				until COURTID > actualcourts
+				do
+					print "COURTID value from arrey PlayDayConfig.courts" (#refer Parameter4 above)
+					print S(SessionID),C(COURTID),Player1, S(SessionID),C(COURTID),Player2,S(SessionID),C(COURTID),Player3,S(SessionID),C(COURTID),Player4.
+					COURTID = COURTID + 1
+				done

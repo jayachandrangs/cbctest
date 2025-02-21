@@ -208,9 +208,34 @@
             color: darkgreen;
         }
 
-        /* Styles for hidden setting buttons */
-        #setting-buttons {
+        /* Settings Dropdown Styles */
+        .settings-dropdown {
             display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            /* Light background for the dropdown */
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            right: 0;
+            /* Position dropdown to the right */
+            flex-direction: column;
+            /* Stack buttons vertically */
+            padding: 0.5em;
+            border-radius: 0.3125em;
+        }
+
+        .settings-dropdown button {
+            display: block;
+            /* Make buttons fill the width of the dropdown */
+            width: 100%;
+            text-align: left;
+            margin: 0.25em 0;
+        }
+
+        /* Show the dropdown when the settings container has class of show */
+        .settings-dropdown.show {
+            display: flex;
         }
     </style>
 </head>
@@ -222,17 +247,19 @@
         <div>
             Session Duration: <input type="number" id="duration-input"> minutes
         </div>
-        <!--Steeling Icon-->
-        <button class="header-btn" id="setting-icon">&#9881;</button>
 
-        <div id="setting-buttons">
-            <button class="header-btn" id="pause-btn">Pause</button>
-            <button class="header-btn" id="reset-btn">Reset</button>
-            <button class="header-btn" id="next-btn">Next</button>
-            <button class="header-btn" id="prev-btn">Prev</button>
-            <button class="header-btn">Config</button>
-            <button class="header-btn">Help</button>
-            <button class="header-btn">Info</button>
+        <!-- Settings Icon and Dropdown -->
+        <div style="position: relative;">
+            <button class="header-btn" id="setting-icon">&#9881; Settings</button>
+            <div id="setting-buttons" class="settings-dropdown">
+                <button class="header-btn" id="pause-btn">Pause</button>
+                <button class="header-btn" id="reset-btn">Reset</button>
+                <button class="header-btn" id="next-btn">Next</button>
+                <button class="header-btn" id="prev-btn">Prev</button>
+                <button class="header-btn">Config</button>
+                <button class="header-btn">Help</button>
+                <button class="header-btn">Info</button>
+            </div>
         </div>
     </div>
 
@@ -307,6 +334,9 @@
             // Event listener for setting icon
             const settingIcon = document.getElementById('setting-icon');
             settingIcon.addEventListener('click', toggleSettingButtons);
+
+            // Double click event to toggle fullscreen
+            document.documentElement.addEventListener('dblclick', toggleFullScreen);
         }
 
         function initializeLocalStorage() {
@@ -540,7 +570,33 @@
         // Function to toggle visibility of setting buttons
         function toggleSettingButtons() {
             const settingButtons = document.getElementById('setting-buttons');
-            settingButtons.style.display = settingButtons.style.display === 'none' ? 'block' : 'none';
+            settingButtons.classList.toggle('show');
+        }
+
+        // Function to toggle fullscreen
+        function toggleFullScreen() {
+            if (!document.fullscreenElement &&    // alternative standard method
+                !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {  // current working methods
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
         }
 
         window.onload = initialize;

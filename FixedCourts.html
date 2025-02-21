@@ -207,6 +207,11 @@
         .player-name.color-dark-green {
             color: darkgreen;
         }
+
+        /* Styles for hidden setting buttons */
+        #setting-buttons {
+            display: none;
+        }
     </style>
 </head>
 
@@ -217,8 +222,11 @@
         <div>
             Session Duration: <input type="number" id="duration-input"> minutes
         </div>
-        <div>
-            <button class="header-btn">Pause</button>
+        <!--Steeling Icon-->
+        <button class="header-btn" id="setting-icon">&#9881;</button>
+
+        <div id="setting-buttons">
+            <button class="header-btn" id="pause-btn">Pause</button>
             <button class="header-btn" id="reset-btn">Reset</button>
             <button class="header-btn" id="next-btn">Next</button>
             <button class="header-btn" id="prev-btn">Prev</button>
@@ -240,6 +248,7 @@
         let timerInterval;
         let totalSeconds;
         let sessionDuration;
+        let isPaused = false;
 
         function initialize() {
             // Keep screen on
@@ -251,6 +260,17 @@
                     .catch(err => console.error('Failed to acquire wake lock:', err));
             } else {
                 console.warn('Wake Lock API not supported.');
+            }
+
+            // Fullscreen
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+                document.documentElement.msRequestFullscreen();
             }
 
             // Hide address bar
@@ -275,9 +295,18 @@
                 }
             });
 
+            // Event listeners for main buttons
             document.getElementById('next-btn').addEventListener('click', goToNextSession);
             document.getElementById('prev-btn').addEventListener('click', goToPreviousSession);
             document.getElementById('reset-btn').addEventListener('click', resetSession);
+
+            // Event listener for pause button
+            const pauseBtn = document.getElementById('pause-btn');
+            pauseBtn.addEventListener('click', togglePause);
+
+            // Event listener for setting icon
+            const settingIcon = document.getElementById('setting-icon');
+            settingIcon.addEventListener('click', toggleSettingButtons);
         }
 
         function initializeLocalStorage() {
@@ -406,11 +435,13 @@
         function startCountdown() {
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                totalSeconds--;
-                updateTimerDisplay();
+                if (!isPaused) {
+                    totalSeconds--;
+                    updateTimerDisplay();
 
-                if (totalSeconds <= 0) {
-                    handleSessionEnd();
+                    if (totalSeconds <= 0) {
+                        handleSessionEnd();
+                    }
                 }
             }, 1000);
         }
@@ -423,22 +454,21 @@
         }
 
         function handleSessionEnd() {
-           console.log("Session end reached!");
-           playBeeps(1000);
-           currentSession++;
-       
-           const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-           if (currentSession > config.nsession) {
-               // Redirect to celebrations.html instead of showing an alert
-               window.location.href = 'celebrations.html';
-               clearInterval(timerInterval);
-               return;
-           }
+            console.log("Session end reached!");
+            playBeeps(1000);
+            currentSession++;
 
-    loadSession(currentSession);
-    startCountdown();
-}
+            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+            if (currentSession > config.nsession) {
+                // Redirect to celebrations.html instead of showing an alert
+                window.location.href = 'celebrations.html';
+                clearInterval(timerInterval);
+                return;
+            }
 
+            loadSession(currentSession);
+            startCountdown();
+        }
 
         function playBeeps(duration) {
             for (let i = 0; i < 10; i++) {
@@ -498,6 +528,19 @@
         function resetSession() {
             loadSession(currentSession);
             startCountdown();
+        }
+
+        // Function to toggle pause/resume
+        function togglePause() {
+            isPaused = !isPaused;
+            const pauseBtn = document.getElementById('pause-btn');
+            pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
+        }
+
+        // Function to toggle visibility of setting buttons
+        function toggleSettingButtons() {
+            const settingButtons = document.getElementById('setting-buttons');
+            settingButtons.style.display = settingButtons.style.display === 'none' ? 'block' : 'none';
         }
 
         window.onload = initialize;

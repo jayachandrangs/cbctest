@@ -1,756 +1,507 @@
- <!DOCTYPE html>
- <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-   content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
-  <title>Court Session Manager</title>
-  <style>
-  /* General Styles */
-  * {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-  }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Court Session Manager</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  body {
-   background-color: #e0f2f1;
-   /* Light teal background */
-   height: 100vh;
-   display: flex;
-   flex-direction: column;
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   color: #333;
-   overflow: hidden;
-  }
+        body {
+            background-color: #e0f2f1;
+            /* Light teal background */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            overflow: hidden;
+        }
 
-  /* Header Styles */
-  #header {
-   height: auto;
-   /* Changed from 15vh */
-   background-color: #008080;
-   /* Teal Header */
-   display: flex;
-   justify-content: space-around;
-   align-items: center;
-   padding: 0.625em 1.25em;
-   /* Consistent padding */
-   box-shadow: 0 0.125em 0.3125em rgba(0, 0, 0, 0.2);
-   /* Darker shadow for contrast */
-   color: white;
-   /* White text for header */
-   flex-wrap: wrap;
-   /* Allow items to wrap */
-  }
+        /* Header Styles */
+        #header {
+            height: 15vh;
+            background-color: #008080;
+            /* Teal Header */
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            /* Darker shadow for contrast */
+            color: white;
+            /* White text for header */
+        }
 
-  #header>div {
-   text-align: center;
-   margin: 0.3125em;
-   /* Add some margin for spacing */
-  }
+        #header>div {
+            text-align: center;
+        }
 
-  .header-btn {
-   padding: 0.5em 1em;
-   /* Adjusted padding */
-   background-color: #26a69a;
-   /* A lighter shade of teal */
-   color: white;
-   border: none;
-   border-radius: 0.3125em;
-   cursor: pointer;
-   margin: 0 0.3125em;
-   transition: background-color 0.3s ease;
-   font-size: 0.8em;
-   /* Smaller font size */
-  }
+        .header-btn {
+            padding: 10px 20px;
+            background-color: #26a69a;
+            /* A lighter shade of teal */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: background-color 0.3s ease;
+        }
 
-  .header-btn:hover {
-   background-color: #009688;
-   /* Darker shade on hover */
-  }
+        .header-btn:hover {
+            background-color: #009688;
+            /* Darker shade on hover */
+        }
 
-  /* Content Styles */
-  #content {
-   height: auto;
-   /* Changed from 70vh */
-   flex-grow: 1;
-   /* Take up remaining space */
-   padding: 0.3125em;
-   display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-   /* Adjusted minmax */
-   /* Responsive columns */
-   gap: 0.625em;
-   overflow-y: auto;
-  }
+        /* Content Styles */
+        #content {
+            height: 70vh;
+            padding: 5px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            /* Responsive columns */
+            gap: 10px;
+            overflow-y: auto;
+        }
 
-  .court-box {
-   background-color: #b2dfdb;
-   /* Light teal for court boxes */
-   padding: 0.625em;
-   border-radius: 0.3125em;
-   min-height: 8em;
-   /* Reduced min-height */
-   box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.2);
-   /* Darker shadow for depth */
-   border: 1px solid #80cbc4;
-   /* Teal border */
-   transition: transform 0.2s ease;
-   color: #000;
-   /* Light text */
-  }
+        .court-box {
+            background-color: #b2dfdb;
+            /* Light teal for court boxes */
+            padding: 10px;
+            border-radius: 5px;
+            min-height: 160px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Darker shadow for depth */
+            border: 1px solid #80cbc4;
+            /* Teal border */
+            transition: transform 0.2s ease;
+            color: #fff;
+            /* Light text */
+        }
 
-  .court-box:hover {
-   transform: translateY(-0.3125em);
-   /* Increased lift on hover */
-  }
+        .court-box:hover {
+            transform: translateY(-5px);
+            /* Increased lift on hover */
+        }
 
-  .court-box h3 {
-   font-size: 1.3em;
-   /* Reduced font size */
-   margin-bottom: 0.625em;
-   color: #004d40;
-   /* Dark teal for titles */
-  }
+        .court-box h3 {
+            font-size: 1.75em;
+            margin-bottom: 10px;
+            color: #004d40;
+            /* Dark teal for titles */
+        }
 
-  .player-name {
-   margin: 0.25em 0;
-   /* Reduced margin */
-   padding: 0.25em;
-   /* Reduced padding */
-   font-size: 1em;
-   /* Reduced font size */
-   border-bottom: 1px solid #4db6ac;
-   /* Lighter teal for player names */
-   color: #000;
-  }
+        .player-name {
+            margin: 8px 0;
+            padding: 8px;
+            font-size: 2em;
+            border-bottom: 1px solid #4db6ac;
+            /* Lighter teal for player names */
+        }
 
-  /* Rested Players Styles */
-  #rested-players {
-   background-color: #008080;
-   /* Teal for rested players section */
-   padding: 0.625em 1.25em;
-   /* Reduced padding */
-   box-shadow: 0 -0.125em 0.625em rgba(0, 0, 0, 0.2);
-   /* Increased shadow */
-   position: fixed;
-   bottom: 0;
-   left: 0;
-   right: 0;
-   min-height: auto;
-   /*Let the content decide the height */
-   max-height: 20vh;
-   overflow-y: auto;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: flex-start;
-   /* Aligned to start */
-   color: white;
-   /* Light text */
-  }
+        /* Rested Players Styles */
+        #rested-players {
+            background-color: #008080;
+            /* Teal for rested players section */
+            padding: 15px 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            /* Increased shadow */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            min-height: 10vh;
+            max-height: 20vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            /* Aligned to start */
+            color: white;
+            /* Light text */
+        }
 
-  #rested-players h3 {
-   color: #fff;
-   font-size: 1em;
-   /* Reduced font size */
-   margin-bottom: 0.3125em;
-   text-align: center;
-  }
+        #rested-players h3 {
+            color: #fff;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            text-align: center;
+        }
 
-  .players-container {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 0.5em;
-   align-items: center;
-   justify-content: center;
-  }
+        .players-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
 
-  .rested-player {
-   background: #26a69a;
-   /* Lighter teal */
-   padding: 0.3em 0.5em;
-   /* Smaller padding */
-   border-radius: 0.3125em;
-   border: 1px solid #009688;
-   /* Darker teal border */
-   box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1);
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   max-width: 9.375em;
-   color: #fff;
-   /* Light text */
-   font-size: 0.6em;
-   /* Reduced font size */
-  }
+        .rested-player {
+            background: #26a69a;
+            /* Lighter teal */
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #009688;
+            /* Darker teal border */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+            color: #fff;
+            /* Light text */
+        }
 
-  /* Timer and Input Styles */
-  #timer {
-   color: white;
-   font-size: 1.8em;
-   /* Reduced font size */
-   font-weight: 600;
-  }
+        /* Timer and Input Styles */
+        #timer {
+            color: white;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
 
-  #session-number {
-   color: white;
-   font-size: 1.1em;
-   /* Reduced font size */
-   font-weight: 500;
-  }
+        #session-number {
+            color: white;
+            font-size: 1.4em;
+            font-weight: 500;
+        }
 
-  #duration-input {
-   width: 3em;
-   /* Adjusted width */
-   padding: 0.3em;
-   /* Adjusted padding */
-   border-radius: 0.3125em;
-   border: 1px solid #4db6ac;
-   /* Teal border */
-   text-align: center;
-   margin-left: 0.3125em;
-   font-size: 0.6em;
-   /* Reduced font size */
-  }
+        #duration-input {
+            width: 60px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #4db6ac;
+            /* Teal border */
+            text-align: center;
+            margin-left: 5px;
+        }
 
-  /* Styles for player name colors */
-  .player-name.color-dark-blue {
-   color: darkblue;
-  }
+        /* Styles for player name colors */
+        .player-name.color-dark-blue {
+            color: darkblue;
+        }
 
-  .player-name.color-black {
-   color: black;
-  }
+        .player-name.color-black {
+            color: black;
+        }
 
-  .player-name.color-dark-red {
-   color: darkred;
-  }
+        .player-name.color-dark-red {
+            color: darkred;
+        }
 
-  .player-name.color-orange {
-   color: orange;
-  }
+        .player-name.color-orange {
+            color: orange;
+        }
 
-  .player-name.color-white {
-   color: white;
-  }
+        .player-name.color-white {
+            color: white;
+        }
 
-  .player-name.color-dark-green {
-   color: darkgreen;
-  }
+        .player-name.color-dark-green {
+            color: darkgreen;
+        }
+    </style>
+</head>
 
-  /* Media Queries for Responsiveness */
-  /*Target smaller tablets (6-inch) in LANDSCAPE */
-  @media screen and (max-width: 600px) and (orientation: landscape) {
-   #header {
-    flex-direction: row;
-    /* Or keep column, experiment! */
-    padding: 0.3em;
-   }
-
-   #header>div {
-    margin: 0.15em 0;
-   }
-
-   .header-btn {
-    padding: 0.3em 0.6em;
-    font-size: 0.6em;
-   }
-
-   #content {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    /* More columns */
-   }
-
-   .court-box {
-    min-height: 6em;
-    padding: 0.3em;
-   }
-
-   .court-box h3 {
-    font-size: 1em;
-   }
-
-   .player-name {
-    font-size: 0.9em;
-    margin: 0.1em 0;
-    padding: 0.1em;
-   }
-
-   #timer {
-    font-size: 1.4em;
-   }
-
-   #session-number {
-    font-size: 0.8em;
-   }
-
-   #rested-players {
-    padding: 0.4em;
-   }
-
-   .rested-player {
-    font-size: 0.5em;
-   }
-  }
-
-  /*Target larger tablets (7-inch) in LANDSCAPE */
-  @media screen and (min-width: 601px) and (max-width: 768px) and (orientation: landscape) {
-   #header {
-    flex-direction: row;
-    /* Or keep column, experiment! */
-    padding: 0.5em;
-   }
-
-   #header>div {
-    margin: 0.25em 0;
-   }
-
-   .header-btn {
-    padding: 0.4em 0.8em;
-    font-size: 0.7em;
-   }
-
-   #content {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    /* More columns */
-   }
-
-   .court-box {
-    min-height: 7em;
-    padding: 0.4em;
-   }
-
-   .court-box h3 {
-    font-size: 1.1em;
-   }
-
-   .player-name {
-    font-size: 1em;
-    margin: 0.2em 0;
-    padding: 0.2em;
-   }
-
-   #timer {
-    font-size: 1.7em;
-   }
-
-   #session-number {
-    font-size: 1em;
-   }
-
-   #rested-players {
-    padding: 0.5em;
-   }
-
-   .rested-player {
-    font-size: 0.6em;
-   }
-  }
-
-  /* Settings Dropdown Styles */
-  .settings-container {
-   position: relative;
-   /* Important for dropdown positioning */
-   display: inline-block;
-  }
-
-  .settings-icon {
-   font-size: 1.5em;
-   /* Adjust icon size as needed */
-   padding: 0.5em;
-   /* Add padding for better appearance */
-   background: none;
-   /* Remove default button background */
-   border: none;
-   /* Remove default button border */
-   cursor: pointer;
-   color: white;
-  }
-
-  .settings-dropdown {
-   display: none;
-   position: absolute;
-   background-color: #f9f9f9;
-   /* Light background for the dropdown */
-   min-width: 160px;
-   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-   z-index: 1;
-   right: 0;
-   /* Position dropdown to the right */
-   flex-direction: column;
-   /* Stack buttons vertically */
-   padding: 0.5em;
-   border-radius: 0.3125em;
-  }
-
-  .settings-dropdown button {
-   display: block;
-   /* Make buttons fill the width of the dropdown */
-   width: 100%;
-   text-align: left;
-   margin: 0.25em 0;
-  }
-
-  /* Show the dropdown when the settings container has class of show */
-  .settings-dropdown.show {
-   display: flex;
-  }
-  </style>
- </head>
-
- <body>
-  <div id="header">
-   <div id="session-number">Session 1</div>
-   <div id="timer">00:00</div>
-   <div>
-    Session Duration: <input type="number" id="duration-input"> minutes
-   </div>
-
-   <!-- Settings Dropdown -->
-   <div class="settings-container">
-    <button class="header-btn settings-icon">&#9881;</button>
-    <!-- Settings Icon (Gear) -->
-    <div class="settings-dropdown">
-     <button class="header-btn pause-btn">Pause</button>
-     <button class="header-btn" id="reset-btn">Reset</button>
-     <button class="header-btn" id="next-btn">Next</button>
-     <button class="header-btn" id="prev-btn">Prev</button>
-     <button class="header-btn">Config</button>
-     <button class="header-btn">Help</button>
-     <button class="header-btn">Info</button>
+<body>
+    <div id="header">
+        <div id="session-number">Session 1</div>
+        <div id="timer">00:00</div>
+        <div>
+            Session Duration: <input type="number" id="duration-input"> minutes
+        </div>
+        <div>
+            <button class="header-btn">Pause</button>
+            <button class="header-btn" id="reset-btn">Reset</button>
+            <button class="header-btn" id="next-btn">Next</button>
+            <button class="header-btn" id="prev-btn">Prev</button>
+            <button class="header-btn">Config</button>
+            <button class="header-btn">Help</button>
+            <button class="header-btn">Info</button>
+        </div>
     </div>
-   </div>
-   <!-- End Settings Dropdown -->
-  </div>
 
-  <div id="content"></div>
+    <div id="content"></div>
 
-  <div id="rested-players">
-   <h3>Rested Players</h3>
-   <div class="players-container"></div>
-  </div>
+    <div id="rested-players">
+        <h3>Rested Players</h3>
+        <div class="players-container"></div>
+    </div>
 
-  <script>
-  let currentSession = 1;
-  let timerInterval;
-  let totalSeconds;
-  let sessionDuration;
-  let isFullscreen = false; // Track fullscreen state
-  let isPaused = false; // Track the pause state
+    <script>
+        let currentSession = 1;
+        let timerInterval;
+        let totalSeconds;
+        let sessionDuration;
 
-  function initialize() {
-   // Keep screen on
-   if ('wakeLock' in navigator) {
-    navigator.wakeLock.request('screen')
-     .then(lock => {
-      console.log('Screen wake lock acquired:', lock);
-     })
-     .catch(err => console.error('Failed to acquire wake lock:', err));
-   } else {
-    console.warn('Wake Lock API not supported.');
-   }
+        function initialize() {
+            // Keep screen on
+            if ('wakeLock' in navigator) {
+                navigator.wakeLock.request('screen')
+                    .then(lock => {
+                        console.log('Screen wake lock acquired:', lock);
+                    })
+                    .catch(err => console.error('Failed to acquire wake lock:', err));
+            } else {
+                console.warn('Wake Lock API not supported.');
+            }
 
-   // Hide address bar
-   hideAddressBar();
+            // Hide address bar
+            window.scrollTo(0, 1);
+            screen.orientation.lock("landscape");
+            initializeLocalStorage();
+            loadSession(currentSession);
+            startCountdown();
+            setInterval(fiveMinuteBeep, 300000);
 
-   initializeLocalStorage();
-   loadSession(currentSession);
-   startCountdown();
-   setInterval(fiveMinuteBeep, 300000);
+            const durationInput = document.getElementById('duration-input');
+            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+            durationInput.value = config.sduration;
 
-   const durationInput = document.getElementById('duration-input');
-   const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-   durationInput.value = config.sduration;
+            durationInput.addEventListener('change', function () {
+                const newDuration = parseInt(this.value);
+                if (!isNaN(newDuration) && newDuration > 0) {
+                    updateSessionDuration(newDuration);
+                } else {
+                    alert('Please enter a valid duration in minutes.');
+                    this.value = config.sduration;
+                }
+            });
 
-   durationInput.addEventListener('change', function() {
-    const newDuration = parseInt(this.value);
-    if (!isNaN(newDuration) && newDuration > 0) {
-     updateSessionDuration(newDuration);
-    } else {
-     alert('Please enter a valid duration in minutes.');
-     this.value = config.sduration;
-    }
-   });
+            document.getElementById('next-btn').addEventListener('click', goToNextSession);
+            document.getElementById('prev-btn').addEventListener('click', goToPreviousSession);
+            document.getElementById('reset-btn').addEventListener('click', resetSession);
+        }
 
-   document.getElementById('next-btn').addEventListener('click', goToNextSession);
-   document.getElementById('prev-btn').addEventListener('click', goToPreviousSession);
-   document.getElementById('reset-btn').addEventListener('click', resetSession);
+        function initializeLocalStorage() {
+            if (!localStorage.getItem('PlayDayConfig')) {
+                const defaultConfig = {
+                    nsession: 3,
+                    sduration: 45,
+                    courts: ["Court1", "Court2", "Court3", "Court4", "Court5", "Court6"]
+                };
+                localStorage.setItem('PlayDayConfig', JSON.stringify(defaultConfig));
+            }
 
-   // Add double-click listener to toggle fullscreen
-   document.addEventListener('dblclick', toggleFullscreen);
+            if (!localStorage.getItem('Session_1')) {
+                const defaultPlayers = [
+                    ["Player11", "Player12", "Player13", "Player14"],
+                    ["Player21", "Player22", "Player23", "Player24"],
+                    ["Player31", "Player32", "Player33", "Player34"],
+                    ["Player41", "Player42", "Player42", "Player43"],
+                    ["Player1", "Player2", "Player3", "Player4"],
+                    ["Player5", "Player6", "Player7", "Player8"]
+                ];
+                localStorage.setItem('Session_1', JSON.stringify(defaultPlayers));
+                localStorage.setItem('Session_1_RestedPlayers', JSON.stringify(["Reserve1", "Reserve2"]));
+            }
+        }
 
-   // Settings Dropdown functionality
-   document.querySelector('.settings-icon').addEventListener('click', function() {
-    document.querySelector('.settings-dropdown').classList.toggle('show');
-   });
+        function loadSession(sessionNumber) {
+            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+            const sessionData = JSON.parse(localStorage.getItem(`Session_${sessionNumber}`) || '[]');
+            const restedPlayers = JSON.parse(localStorage.getItem(`Session_${sessionNumber}_RestedPlayers`) || '[]');
 
-   document.querySelector('.pause-btn').addEventListener('click', function() {
-    isPaused = !isPaused; // Toggle the pause state
+            const courts = config.courts.map((courtName, index) => ({
+                courtname: courtName,
+                players: sessionData[index] || []
+            }));
 
-    if (isPaused) {
-     clearInterval(timerInterval); // Stop the timer
-     this.textContent = "Resume"; // Change button text
-    } else {
-     startCountdown(); // Resume the timer
-     this.textContent = "Pause"; // Change button text back
-    }
-   });
-  }
+            renderCourts(courts);
+            renderRestedPlayers(restedPlayers);
 
-  function hideAddressBar() {
-   // Hide address bar
-   window.scrollTo(0, 1);
-  }
+            sessionDuration = config.sduration * 60;
+            totalSeconds = sessionDuration;
+            updateTimerDisplay();
 
-  function toggleFullscreen() {
-   if (!isFullscreen) {
-    // Enter fullscreen
-    if (document.documentElement.requestFullscreen) {
-     document.documentElement.requestFullscreen();
-    } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-     document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-     document.documentElement.webkitRequestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-     document.documentElement.msRequestFullscreen();
-    }
-   } else {
-    // Exit fullscreen
-    if (document.exitFullscreen) {
-     document.exitFullscreen();
-    } else if (document.mozCancelFullScreen) { // Firefox
-     document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
-     document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) { // IE/Edge
-     document.msExitFullscreen();
-    }
-   }
-   isFullscreen = !isFullscreen;
-  }
+            document.getElementById('session-number').textContent = `Session ${sessionNumber}`;
+        }
 
-  function initializeLocalStorage() {
-   if (!localStorage.getItem('PlayDayConfig')) {
-    const defaultConfig = {
-     nsession: 3,
-     sduration: 45,
-     courts: ["Court1", "Court2", "Court3", "Court4", "Court5", "Court6"]
-    };
-    localStorage.setItem('PlayDayConfig', JSON.stringify(defaultConfig));
-   }
-   if (!localStorage.getItem('Session_1')) {
-    const defaultPlayers = [
-     ["Player11", "Player12", "Player13", "Player14"],
-     ["Player21", "Player22", "Player23", "Player24"],
-     ["Player31", "Player32", "Player33", "Player34"],
-     ["Player41", "Player42", "Player42", "Player43"],
-     ["Player1", "Player2", "Player3", "Player4"],
-     ["Player5", "Player6", "Player7", "Player8"]
-    ];
-    localStorage.setItem('Session_1', JSON.stringify(defaultPlayers));
-    localStorage.setItem('Session_1_RestedPlayers', JSON.stringify(["Reserve1", "Reserve2"]));
-   }
-  }
+        function renderCourts(courts) {
+            const content = document.getElementById('content');
+            content.innerHTML = '';
 
-  function loadSession(sessionNumber) {
-   const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-   const sessionData = JSON.parse(localStorage.getItem(`Session_${sessionNumber}`) || '[]');
-   const restedPlayers = JSON.parse(localStorage.getItem(`Session_${sessionNumber}_RestedPlayers`) || '[]');
+            const courtCount = courts.length;
+            let columns = 3;
 
-   const courts = config.courts.map((courtName, index) => ({
-    courtname: courtName,
-    players: sessionData[index] || []
-   }));
+            if (courtCount <= 3) columns = courtCount;
+            else if (courtCount <= 5) columns = 3;
+            else if (courtCount === 4) columns = 2;
 
-   renderCourts(courts);
-   renderRestedPlayers(restedPlayers);
+            content.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
 
-   sessionDuration = config.sduration * 60;
-   totalSeconds = sessionDuration;
-   updateTimerDisplay();
+            courts.forEach(court => {
+                const courtBox = document.createElement('div');
+                courtBox.className = 'court-box';
+                courtBox.innerHTML = `<h3>${court.courtname}</h3>`;
 
-   document.getElementById('session-number').textContent = `Session ${sessionNumber}`;
-  }
+                // Alphabetically sort players within the court
+                court.players.sort();
 
-  function renderCourts(courts) {
-   const content = document.getElementById('content');
-   content.innerHTML = '';
+                court.players.forEach(player => {
+                    const playerElement = document.createElement('div');
+                    playerElement.className = 'player-name';
 
-   const courtCount = courts.length;
-   let columns = 3;
+                    // Determine color based on first letter
+                    const firstLetter = player.charAt(0).toUpperCase();
+                    let colorClass = '';
 
-   if (courtCount <= 3) columns = courtCount;
-   else if (courtCount <= 5) columns = 3;
-   else if (courtCount === 4) columns = 2;
+                    if (firstLetter >= 'A' && firstLetter <= 'F') {
+                        colorClass = 'color-dark-blue';
+                    } else if (firstLetter >= 'G' && firstLetter <= 'L') {
+                        colorClass = 'color-black';
+                    } else if (firstLetter >= 'M' && firstLetter <= 'S') {
+                        colorClass = 'color-dark-red';
+                    } else if (firstLetter >= 'T' && firstLetter <= 'Z') {
+                        colorClass = 'color-dark-green';
+                    }
 
-   content.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+                    playerElement.classList.add(colorClass);
+                    playerElement.textContent = player;
+                    courtBox.appendChild(playerElement);
+                });
 
-   courts.forEach(court => {
-    const courtBox = document.createElement('div');
-    courtBox.className = 'court-box';
-    courtBox.innerHTML = `<h3>${court.courtname}</h3>`;
+                content.appendChild(courtBox);
+            });
+        }
 
-    // Alphabetically sort players within the court
-    court.players.sort();
+        function renderRestedPlayers(players) {
+            const container = document.querySelector('.players-container');
+            container.innerHTML = '';
 
-    court.players.forEach(player => {
-     const playerElement = document.createElement('div');
-     playerElement.className = 'player-name';
+            // Alphabetically sort rested players
+            players.sort();
 
-     // Determine color based on first letter
-     const firstLetter = player.charAt(0).toUpperCase();
-     let colorClass = '';
+            players.forEach(player => {
+                const element = document.createElement('div');
+                element.className = 'rested-player';
 
-     if (firstLetter >= 'A' && firstLetter <= 'F') {
-      colorClass = 'color-dark-blue';
-     } else if (firstLetter >= 'G' && firstLetter <= 'L') {
-      colorClass = 'color-black';
-     } else if (firstLetter >= 'M' && firstLetter <= 'S') {
-      colorClass = 'color-dark-red';
-     } else if (firstLetter >= 'T' && firstLetter <= 'Z') {
-      colorClass = 'color-dark-green';
-     }
+                // Determine color based on first letter
+                const firstLetter = player.charAt(0).toUpperCase();
+                let colorClass = '';
 
-     playerElement.classList.add(colorClass);
-     playerElement.textContent = player;
-     courtBox.appendChild(playerElement);
-    });
+                if (firstLetter >= 'A' && firstLetter <= 'F') {
+                    colorClass = 'color-dark-blue';
+                } else if (firstLetter >= 'G' && firstLetter <= 'L') {
+                    colorClass = 'color-black';
+                } else if (firstLetter >= 'M' && firstLetter <= 'S') {
+                    colorClass = 'color-dark-red';
+                } else if (firstLetter >= 'T' && firstLetter <= 'Z') {
+                    colorClass = 'color-white';
+                }
 
-    content.appendChild(courtBox);
-   });
-  }
+                element.classList.add(colorClass);
+                element.textContent = player;
+                container.appendChild(element);
+            });
+        }
 
-  function renderRestedPlayers(players) {
-   const container = document.querySelector('.players-container');
-   container.innerHTML = '';
+        function startCountdown() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                totalSeconds--;
+                updateTimerDisplay();
 
-   // Alphabetically sort rested players
-   players.sort();
+                if (totalSeconds <= 0) {
+                    handleSessionEnd();
+                }
+            }, 1000);
+        }
 
-   players.forEach(player => {
-    const element = document.createElement('div');
-    element.className = 'rested-player';
+        function updateTimerDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            document.getElementById('timer').textContent =
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
 
-    // Determine color based on first letter
-    const firstLetter = player.charAt(0).toUpperCase();
-    let colorClass = '';
+        function handleSessionEnd() {
+           console.log("Session end reached!");
+           playBeeps(1000);
+           currentSession++;
+       
+           const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+           if (currentSession > config.nsession) {
+               // Redirect to celebrations.html instead of showing an alert
+               window.location.href = 'celebrations.html';
+               clearInterval(timerInterval);
+               return;
+           }
 
-    if (firstLetter >= 'A' && firstLetter <= 'F') {
-     colorClass = 'color-dark-blue';
-    } else if (firstLetter >= 'G' && firstLetter <= 'L') {
-     colorClass = 'color-black';
-    } else if (firstLetter >= 'M' && firstLetter <= 'S') {
-     colorClass = 'color-dark-red';
-    } else if (firstLetter >= 'T' && firstLetter <= 'Z') {
-     colorClass = 'color-white';
-    }
-
-    element.classList.add(colorClass);
-    element.textContent = player;
-    container.appendChild(element);
-   });
-  }
-
-  function startCountdown() {
-   clearInterval(timerInterval);
-   timerInterval = setInterval(() => {
-    totalSeconds--;
-    updateTimerDisplay();
-
-    if (totalSeconds <= 0) {
-     handleSessionEnd();
-    }
-   }, 1000);
-  }
-
-  function updateTimerDisplay() {
-   const minutes = Math.floor(totalSeconds / 60);
-   const seconds = totalSeconds % 60;
-   document.getElementById('timer').textContent =
-    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  }
-
-  function handleSessionEnd() {
-   console.log("Session end reached!");
-   playBeeps(1000);
-   currentSession++;
-
-   const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-   if (currentSession > config.nsession) {
-    // Redirect to celebrations.html instead of showing an alert
-    window.location.href = 'celebrations.html';
-    clearInterval(timerInterval);
-    return;
-   }
-
-   loadSession(currentSession);
-   startCountdown();
-  }
-
-  function playBeeps(duration) {
-   for (let i = 0; i < 10; i++) {
-    setTimeout(() => {
-     playBeep(200); // Shorten beep duration to 200ms
-    }, i * 300); // Reduce delay to 300ms to create distinct beeps
-   }
-  }
-
-  function playBeep(duration) {
-   const audioContext = new(window.AudioContext || window.webkitAudioContext)();
-   const oscillator = audioContext.createOscillator();
-   const gainNode = audioContext.createGain();
-   oscillator.connect(gainNode);
-   gainNode.connect(audioContext.destination);
-   oscillator.type = 'sine';
-   oscillator.frequency.value = 800;
-   gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-   gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.1);
-   gainNode.gain.setValueAtTime(1, audioContext.currentTime + duration / 1000 - 0.1);
-   gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration / 1000);
-   oscillator.start(audioContext.currentTime);
-   const stopTime = audioContext.currentTime + duration / 1000;
-   oscillator.stop(stopTime);
-  }
-
-  function fiveMinuteBeep() {
-   playBeep(500);
-  }
-
-  function updateSessionDuration(newDuration) {
-   const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-   config.sduration = newDuration;
-   localStorage.setItem('PlayDayConfig', JSON.stringify(config));
-
-   loadSession(currentSession);
-   startCountdown();
-  }
-
-  function goToNextSession() {
-   const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-   if (currentSession < config.nsession) {
-    currentSession++;
     loadSession(currentSession);
     startCountdown();
-   }
-  }
+}
 
-  function goToPreviousSession() {
-   if (currentSession > 1) {
-    currentSession--;
-    loadSession(currentSession);
-    startCountdown();
-   }
-  }
 
-  function resetSession() {
-   loadSession(currentSession);
-   startCountdown();
-  }
+        function playBeeps(duration) {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    playBeep(duration);
+                }, i * 600);
+            }
+        }
 
-  window.onload = initialize;
-  </script>
- </body>
+        function playBeep(duration) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 800;
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(1, audioContext.currentTime + duration / 1000 - 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration / 1000);
+            oscillator.start(audioContext.currentTime);
+            const stopTime = audioContext.currentTime + duration / 1000;
+            oscillator.stop(stopTime);
+        }
 
- </html>
+        function fiveMinuteBeep() {
+            playBeep(500);
+        }
+
+        function updateSessionDuration(newDuration) {
+            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+            config.sduration = newDuration;
+            localStorage.setItem('PlayDayConfig', JSON.stringify(config));
+
+            loadSession(currentSession);
+            startCountdown();
+        }
+
+        function goToNextSession() {
+            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+            if (currentSession < config.nsession) {
+                currentSession++;
+                loadSession(currentSession);
+                startCountdown();
+            }
+        }
+
+        function goToPreviousSession() {
+            if (currentSession > 1) {
+                currentSession--;
+                loadSession(currentSession);
+                startCountdown();
+            }
+        }
+
+        function resetSession() {
+            loadSession(currentSession);
+            startCountdown();
+        }
+
+        window.onload = initialize;
+    </script>
+</body>
+
+</html>

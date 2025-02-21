@@ -101,7 +101,7 @@
         .player-name {
             margin: 8px 0;
             padding: 8px;
-            font-size: 1.8em;
+            font-size: 1.9em;
             border-bottom: 1px solid #4db6ac;
             /* Lighter teal for player names */
         }
@@ -145,19 +145,14 @@
         }
 
         .rested-player {
-            background: #26a69a;
-            /* Lighter teal */
-            padding: 8px 12px;
-            border-radius: 5px;
-            border: 1px solid #009688;
-            /* Darker teal border */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0; /* Modified: removed padding */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 150px;
             color: #fff;
             /* Light text */
+            font-size: 1.6em; /* Increased font size by 50% (1em * 1.5 = 1.5em) */
         }
 
         /* Timer and Input Styles */
@@ -276,7 +271,6 @@
         let totalSeconds;
         let sessionDuration;
         let isPaused = false;
-        let beepsPlaying = false; // Flag to track if beeps are playing
 
         function initialize() {
             // Keep screen on
@@ -484,17 +478,16 @@
                 `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
-        async function handleSessionEnd() {
+        function handleSessionEnd() {
             console.log("Session end reached!");
-            beepsPlaying = true; // Set the flag before playing beeps
-            await playBeeps(1000); // Wait for beeps to complete
-            beepsPlaying = false; // Reset the flag after beeps are done
-
+            playBeeps(1000);
             currentSession++;
 
             const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
             if (currentSession > config.nsession) {
                 // Redirect to celebrations.html instead of showing an alert
+                playBeeps(1000);
+                setTimeout(actionB, 10000);
                 window.location.href = 'celebrations.html';
                 clearInterval(timerInterval);
                 return;
@@ -505,22 +498,11 @@
         }
 
         function playBeeps(duration) {
-            return new Promise(resolve => {
-                let beepCount = 10;
-                let beepIndex = 0;
-
-                function playNextBeep() {
-                    if (beepIndex < beepCount) {
-                        playBeep(200);
-                        beepIndex++;
-                        setTimeout(playNextBeep, 300); // Schedule the next beep
-                    } else {
-                        resolve(); // Resolve the promise when all beeps are done
-                    }
-                }
-
-                playNextBeep(); // Start the sequence of beeps
-            });
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    playBeep(200);
+                }, i * 300);
+            }
         }
 
         function playBeep(duration) {

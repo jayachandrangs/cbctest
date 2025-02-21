@@ -487,9 +487,9 @@
             if (currentSession > config.nsession) {
                 // Redirect to celebrations.html instead of showing an alert
                 playBeeps(1000);
-                setTimeout(actionB, 10000);
-                window.location.href = 'celebrations.html';
-                clearInterval(timerInterval);
+                // setTimeout(actionB, 10000);
+                 window.location.href = 'celebrations.html';
+                 clearInterval(timerInterval);
                 return;
             }
 
@@ -523,7 +523,7 @@
         }
 
         function fiveMinuteBeep() {
-            playBeep(500);
+            playBeep(200);
         }
 
         function updateSessionDuration(newDuration) {

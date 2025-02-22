@@ -14,8 +14,8 @@
         }
 
         body {
-            background-color: #e0f2f1;
-            /* Light teal background */
+            background-color: #ffffff;
+            /* Light teal white */
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -27,7 +27,7 @@
         /* Header Styles */
         #header {
             height: 15vh;
-            background-color: #008080;
+            background-color: #333333;
             /* Teal Header */
             display: flex;
             justify-content: space-around;
@@ -45,9 +45,9 @@
 
         .header-btn {
             padding: 10px 20px;
-            background-color: #26a69a;
+            background-color: #F5F5F5;
             /* A lighter shade of teal */
-            color: white;
+            color: black;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -56,7 +56,7 @@
         }
 
         .header-btn:hover {
-            background-color: #009688;
+            background-color: #333333;
             /* Darker shade on hover */
         }
 
@@ -72,14 +72,14 @@
         }
 
         .court-box {
-            background-color: #b2dfdb;
+            background-color: #F5F5F5;
             /* Light teal for court boxes */
             padding: 10px;
             border-radius: 5px;
             min-height: 160px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             /* Darker shadow for depth */
-            border: 1px solid #80cbc4;
+            border: 1px solid #BFBFBF;
             /* Teal border */
             transition: transform 0.2s ease;
             color: #fff;
@@ -94,21 +94,21 @@
         .court-box h3 {
             font-size: 1.6em;
             margin-bottom: 10px;
-            color: #004d40;
+            color: #333333;
             /* Dark teal for titles */
         }
 
         .player-name {
             margin: 8px 0;
-            padding: 8px;
+            padding: 1.5px;
             font-size: 1.9em;
-            border-bottom: 1px solid #4db6ac;
+            border-bottom: 1px solid #BFBFBF;
             /* Lighter teal for player names */
         }
 
         /* Rested Players Styles */
         #rested-players {
-            background-color: #008080;
+            background-color: #333333;
             /* Teal for rested players section */
             padding: 15px 20px;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
@@ -195,8 +195,8 @@
             color: orange;
         }
 
-        .player-name.color-white {
-            color: white;
+        .player-name.color-dark-orange {
+            color: orange;
         }
 
         .player-name.color-dark-green {
@@ -207,7 +207,7 @@
         .settings-dropdown {
             display: none;
             position: absolute;
-            background-color: #f9f9f9;
+            background-color: #333333;
             /* Light background for the dropdown */
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -414,7 +414,7 @@
                     } else if (firstLetter >= 'M' && firstLetter <= 'S') {
                         colorClass = 'color-dark-red';
                     } else if (firstLetter >= 'T' && firstLetter <= 'Z') {
-                        colorClass = 'color-dark-green';
+                        colorClass = 'color-dark-orange';
                     }
 
                     playerElement.classList.add(colorClass);
@@ -448,7 +448,7 @@
                 } else if (firstLetter >= 'M' && firstLetter <= 'S') {
                     colorClass = 'color-dark-red';
                 } else if (firstLetter >= 'T' && firstLetter <= 'Z') {
-                    colorClass = 'color-white';
+                    colorClass = 'color-dark-orange';
                 }
 
                 element.classList.add(colorClass);

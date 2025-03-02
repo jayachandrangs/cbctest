@@ -64,11 +64,16 @@
         #content {
             height: 70vh;
             padding: 5px;
-            display: flex; /* Changed to flexbox for single row */
-            flex-direction: row; /* Display court boxes in a row */
-            overflow-x: auto; /* Enable horizontal scrolling */
-            overflow-y: hidden; /* Hide vertical scrollbar */
-            white-space: nowrap; /* Prevent court boxes from wrapping */
+            display: flex;
+            /* Changed to flexbox for single row */
+            flex-direction: row;
+            /* Display court boxes in a row */
+            overflow-x: auto;
+            /* Enable horizontal scrolling */
+            overflow-y: hidden;
+            /* Hide vertical scrollbar */
+            white-space: nowrap;
+            /* Prevent court boxes from wrapping */
         }
 
         .court-box {
@@ -76,7 +81,8 @@
             /* Light teal for court boxes */
             padding: 10px;
             border-radius: 5px;
-            min-width: 250px; /* Ensure each box has a minimum width */
+            min-width: 250px;
+            /* Ensure each box has a minimum width */
             min-height: 160px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             /* Darker shadow for depth */
@@ -85,9 +91,12 @@
             transition: transform 0.2s ease;
             color: #000;
             /* Light text */
-            margin-right: 10px; /* Add spacing between court boxes */
-            display: inline-block; /* Ensure they stay in a row */
-            vertical-align: top; /* Align items to the top */
+            margin-right: 10px;
+            /* Add spacing between court boxes */
+            display: inline-block;
+            /* Ensure they stay in a row */
+            vertical-align: top;
+            /* Align items to the top */
             text-align: center;
         }
 
@@ -104,19 +113,21 @@
         }
 
         .player-name {
-            margin: 8px 0;
-            padding: 1.5px;
-            font-size: 3.0em;
+            margin: 4px 0;
+            padding: 1.0px;
+            font-size: 2.5em;
+            text-align: left;
             border-bottom: 1px solid #BFBFBF;
             /* Lighter teal for player names */
-            display: block; /* Ensure each player name is on a new line */
+            display: block;
+            /* Ensure each player name is on a new line */
         }
 
         /* Rested Players Styles */
         #rested-players {
             background-color: #333333;
             /* Teal for rested players section */
-            padding: 15px 20px;
+            padding: 10px 15px;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
             /* Increased shadow */
             position: fixed;
@@ -124,7 +135,7 @@
             left: 0;
             right: 0;
             min-height: 10vh;
-            max-height: 20vh;
+            max-height: 30vh;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -137,7 +148,7 @@
 
         #rested-players h3 {
             color: #fff;
-            font-size: 1.2em;
+            font-size: 1.5em;
             margin-bottom: 5px;
             text-align: center;
         }
@@ -151,14 +162,16 @@
         }
 
         .rested-player {
-            padding: 0; /* Modified: removed padding */
+            padding: 3;
+            /* Modified: removed padding */
             white-space: nowrap;
-            overflow: hidden;
+            overflow: wrap;
             text-overflow: ellipsis;
-            max-width: 150px;
+            max-width: 400px;
             color: #fff;
             /* Light text */
-            font-size: 1.6em; /* Increased font size by 50% (1em * 1.5 = 1.5em) */
+            font-size: 2.5em;
+            /* Increased font size by 50% (1em * 1.5 = 1.5em) */
         }
 
         /* Timer and Input Styles */
@@ -238,6 +251,11 @@
         .settings-dropdown.show {
             display: flex;
         }
+
+        .player-separator {
+            color: white;
+            font-size: 2.5em;
+        }
     </style>
 </head>
 
@@ -293,11 +311,14 @@
             // Fullscreen
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+            } else if (document.documentElement.mozRequestFullScreen) {
+                /* Firefox */
                 document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                /* Chrome, Safari and Opera */
                 document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+            } else if (document.documentElement.msRequestFullscreen) {
+                /* IE/Edge */
                 document.documentElement.msRequestFullscreen();
             }
 
@@ -430,7 +451,7 @@
             // Alphabetically sort rested players
             players.sort();
 
-            players.forEach(player => {
+            players.forEach((player, index) => {
                 const element = document.createElement('div');
                 element.className = 'rested-player';
 
@@ -451,6 +472,14 @@
                 element.classList.add(colorClass);
                 element.textContent = player;
                 container.appendChild(element);
+
+                // Add separator if not the last player
+                if (index < players.length - 1) {
+                    const separator = document.createElement('span');
+                    separator.className = 'player-separator';
+                    separator.textContent = ' - ';
+                    container.appendChild(separator);
+                }
             });
         }
 
@@ -485,8 +514,8 @@
                 // Redirect to celebrations.html instead of showing an alert
                 playBeeps(1000);
                 // setTimeout(actionB, 10000);
-                 window.location.href = 'celebrations.html';
-                 clearInterval(timerInterval);
+                window.location.href = 'celebrations.html';
+                clearInterval(timerInterval);
                 return;
             }
 
@@ -569,8 +598,8 @@
 
         // Function to toggle fullscreen
         function toggleFullScreen() {
-            if (!document.fullscreenElement &&    // alternative standard method
-                !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {  // current working methods
+            if (!document.fullscreenElement && // alternative standard method
+                !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) { // current working methods
                 if (document.documentElement.requestFullscreen) {
                     document.documentElement.requestFullscreen();
                 } else if (document.documentElement.msRequestFullscreen) {

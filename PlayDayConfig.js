@@ -59,7 +59,7 @@ async function commitChanges() {
     playDayConfig.numberToAssign = 0;
     localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
 
-    const csvUrl = "https://github.com/jayachandrangs/cbc/blob/main/RiVi_playerlist.csv";
+    const csvUrl = "https://raw.githubusercontent.com/jayachandrangs/cbc/main/RiVi_playerlist.csv";
     try {
         const response = await fetch(csvUrl);
         if (!response.ok) {

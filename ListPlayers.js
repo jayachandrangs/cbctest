@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             localStorage.setItem('playerDataForMPlay', playersWithNumbers.join('\n'));
             alert("Player selections confirmed. Redirecting to MPlay page.");
-            window.location.href = 'MPlay.html';
+            window.location.href = 'DynamicCourts.html';
         } catch (error) {
             console.error("Error confirming player selections:", error);
             alert("There was an error confirming player selections. Please try again.");

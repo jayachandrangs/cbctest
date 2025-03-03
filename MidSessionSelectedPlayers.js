@@ -264,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPlayers();
   createAlphabetScrollBar();
   document.getElementById('searchBar').addEventListener('input', filterPlayers);
+  document.getElementById('playerModal').style.display = "block"; // ADD THIS LINE
 });
 
 // Display loaded players on the UI

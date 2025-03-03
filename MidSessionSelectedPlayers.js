@@ -1,3 +1,4 @@
+// MidSessionSelectedPlayers.js
 // Utility function to go to another page
 function goToPage(page) {
   window.location.href = page;
@@ -264,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPlayers();
   createAlphabetScrollBar();
   document.getElementById('searchBar').addEventListener('input', filterPlayers);
-  document.getElementById('playerModal').style.display = "block"; // ADD THIS LINE
+//  document.getElementById('playerModal').style.display = "block"; // ADD THIS LINE
 });
 
 // Display loaded players on the UI

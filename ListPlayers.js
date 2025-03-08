@@ -81,36 +81,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.getElementById('backButton').addEventListener('click', () => {
-        window.location.href = 'page12.html';
+        window.location.href = 'SelectedPlayers.html';
     });
 
-    document.getElementById('refreshButton').addEventListener('click', () => {
-        sortedPlayers = JSON.parse(localStorage.getItem('PlayingToday')) || [];
-        clubMembers = JSON.parse(localStorage.getItem('clubmembers')) || [];
-        renderPlayers();
-        alert("Screen refreshed with current data.");
-    });
-
-    document.getElementById('allotCourtMixedButton').addEventListener('click', () => {
+    document.getElementById('allotCourtsButton').addEventListener('click', () => {
+        console.log("allotCourtsButton clicked!");
         try {
             resetPlayerStats();
+            
+            // Check if all players in PlayingToday have a valid number
+            const allPlayersHaveNumbers = sortedPlayers.every(player => player.number !== null && player.number !== undefined);
+    
+            if (!allPlayersHaveNumbers) {
+                alert("Not all players have a number assigned. Please ensure all players have a valid number.");
+                return;
+            }
+    
             const playersWithNumbers = sortedPlayers
                 .filter(player => player.number !== null)
                 .map(player => `${player.number},${player.Player},${player.division}`);
-
-            if (playersWithNumbers.length !== 25) {
-                alert("25 players are not selected. Please select exactly 25 players.");
-                return;
-            }
-
+    
             playersWithNumbers.sort((a, b) => {
                 const numA = parseInt(a.split(',')[0]);
                 const numB = parseInt(b.split(',')[0]);
                 return numA - numB;
             });
-
+    
             localStorage.setItem('playerDataForMPlay', playersWithNumbers.join('\n'));
-            alert("Player selections confirmed. Redirecting to MPlay page.");
+//            alert("Player selections confirmed. Redirecting to MPlay page.");
             window.location.href = 'DynamicCourts.html';
         } catch (error) {
             console.error("Error confirming player selections:", error);
@@ -118,30 +116,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('allotCourtSimpleButton').addEventListener('click', () => {
-        try {
-            resetPlayerStats();
-            const playersWithNumbers = sortedPlayers
-                .filter(player => player.number !== null)
-                .map(player => `${player.number},${player.Player},${player.division}`);
-
+//    document.getElementById('allotCourtsButton').addEventListener('click', () => {
+//        console.log("allotCourtsButton clicked!");
+//        try {
+//            resetPlayerStats();
+//            const playersWithNumbers = sortedPlayers
+//                .filter(player => player.number !== null)
+//                .map(player => `${player.number},${player.Player},${player.division}`);
+//
 //            if (playersWithNumbers.length !== 25) {
 //                alert("25 players are not selected. Please select exactly 25 players.");
 //                return;
 //            }
+//
+//            playersWithNumbers.sort((a, b) => {
+//                const numA = parseInt(a.split(',')[0]);
+//                const numB = parseInt(b.split(',')[0]);
+//                return numA - numB;
+//            });
+//
+//            localStorage.setItem('playerDataForMPlay', playersWithNumbers.join('\n'));
+//            alert("Player selections confirmed. Redirecting to MPlay page.");
+//            window.location.href = 'DynamicCourts.html';
+//        } catch (error) {
+//            console.error("Error confirming player selections:", error);
+//            alert("There was an error confirming player selections. Please try again.");
+//        }
+//    });
 
-            playersWithNumbers.sort((a, b) => {
-                const numA = parseInt(a.split(',')[0]);
-                const numB = parseInt(b.split(',')[0]);
-                return numA - numB;
-            });
+//    document.getElementById('allotCourtSimpleButton').addEventListener('click', () => {
+//        try {
+//            resetPlayerStats();
+//            const playersWithNumbers = sortedPlayers
+//                .filter(player => player.number !== null)
+//                .map(player => `${player.number},${player.Player},${player.division}`);
 
-            localStorage.setItem('playerDataForMPlay', playersWithNumbers.join('\n'));
-            alert("Player selections confirmed. Redirecting to NPlay page.");
-            window.location.href = 'NPlay.html';
-        } catch (error) {
-            console.error("Error confirming player selections:", error);
-            alert("There was an error confirming player selections. Please try again.");
-        }
-    });
+////            if (playersWithNumbers.length !== 25) {
+////                alert("25 players are not selected. Please select exactly 25 players.");
+////                return;
+////           }
+
+//            playersWithNumbers.sort((a, b) => {
+//                const numA = parseInt(a.split(',')[0]);
+//                const numB = parseInt(b.split(',')[0]);
+//                return numA - numB;
+//            });
+//
+//            localStorage.setItem('playerDataForMPlay', playersWithNumbers.join('\n'));
+//            alert("Player selections confirmed. Redirecting to NPlay page.");
+//            window.location.href = 'NPlay.html';
+//        } catch (error) {
+//            console.error("Error confirming player selections:", error);
+//            alert("There was an error confirming player selections. Please try again.");
+//        }
+//    });
 });

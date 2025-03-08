@@ -1,4 +1,5 @@
 // MidSessionSelectedPlayers.js
+
 // Utility function to go to another page
 function goToPage(page) {
   window.location.href = page;
@@ -16,23 +17,23 @@ let isLoading = false;
 // Load players from localStorage or prompt for upload if not available
 async function loadPlayers() {
   if (isLoading) {
-    console.log("Already loading, please wait.");
+    // console.log("Already loading, please wait.");
     return;
   }
   isLoading = true;
-  console.log("Loading players...");
+  // console.log("Loading players...");
   const storedData = localStorage.getItem('clubmembers');
   if (storedData) {
     try {
       const players = JSON.parse(storedData);
-      console.log(`Loaded ${players.length} players from localStorage`);
+      // console.log(`Loaded ${players.length} players from localStorage`);
       displayPlayers(players);
     } catch (error) {
-      console.error("Error parsing stored data:", error);
+      // console.error("Error parsing stored data:", error);
       promptForCSVUpload();
     }
   } else {
-    console.log("No stored data found. Prompting for CSV upload.");
+    // console.log("No stored data found. Prompting for CSV upload.");
     promptForCSVUpload();
   }
   isLoading = false;
@@ -40,40 +41,76 @@ async function loadPlayers() {
 
 // Toggle player number assignment
 function togglePlayerNumber(playerName, playerDiv) {
+  // console.log(`togglePlayerNumber called for player: ${playerName}`);
+
   const existingBubble = playerDiv.querySelector('.player-number');
-  if (existingBubble) playerDiv.removeChild(existingBubble);
+  // console.log(`Existing bubble:`, existingBubble);
+  if (existingBubble) {
+    // console.log(`Removing existing bubble`);
+    playerDiv.removeChild(existingBubble);
+  }
+
   let playersData = JSON.parse(localStorage.getItem('clubmembers')) || [];
+  // console.log(`playersData from localStorage:`, playersData);
   let playerIndex = playersData.findIndex(p => p.Player === playerName);
+  // console.log(`playerIndex:`, playerIndex);
+
   let playDayConfig = JSON.parse(localStorage.getItem('PlayDayConfig')) || {};
-  if (!playDayConfig.removedNumbers) playDayConfig.removedNumbers = [];
+  // console.log(`playDayConfig from localStorage:`, playDayConfig);
+  if (!playDayConfig.removedNumbers) {
+    // console.log(`Initializing playDayConfig.removedNumbers to []`);
+    playDayConfig.removedNumbers = [];
+  }
+
   let playingToday = JSON.parse(localStorage.getItem('PlayingToday')) || [];
+  // console.log(`playingToday from localStorage:`, playingToday);
+
+  // console.log(`playerInfo[${playerName}].number:`, playerInfo[playerName]?.number); // Use optional chaining
 
   if (playerInfo[playerName].number === null) {
+    // console.log(`playerInfo[${playerName}].number is null - Assigning a number`);
+
     let numberToAssign;
     if (playDayConfig.removedNumbers.length > 0) {
       numberToAssign = Math.min(...playDayConfig.removedNumbers);
+      // console.log(`Reusing removed number: ${numberToAssign}`);
       playDayConfig.removedNumbers = playDayConfig.removedNumbers.filter(n => n !== numberToAssign);
     } else {
       numberToAssign = (playDayConfig.numberToAssign || 0) + 1;
+      // console.log(`Assigning new number: ${numberToAssign}`);
     }
 
     if (numberToAssign <= NUMPLAYERS) {
+      // console.log(`Number ${numberToAssign} is within NUMPLAYERS limit`);
       playerInfo[playerName].number = numberToAssign;
+      // console.log(`Assigned number ${numberToAssign} to playerInfo[${playerName}].number`);
       createNumberBubble(playerDiv, numberToAssign);
+
       if (playerIndex !== -1) {
+        // console.log(`playerIndex is valid`);
         playersData[playerIndex].PlayingToday = numberToAssign;
+        // console.log(`Set playersData[${playerIndex}].PlayingToday to ${numberToAssign}`);
         TOTALPLAYERS++;
-        playersData[playerIndex].alloted += 1;
+        // console.log(`Incremented TOTALPLAYERS to ${TOTALPLAYERS}`);
+        playersData[playerIndex].alloted = 2;  // SET alloted to 2 (initial assignment)
+        // console.log(`SET playersData[${playerIndex}].alloted to 2`);
         playDayConfig.numberToAssign = Math.max(playDayConfig.numberToAssign || 0, numberToAssign);
+        // console.log(`Updated playDayConfig.numberToAssign to ${playDayConfig.numberToAssign}`);
 
         if (playingToday.length > 0) {
           let lowestPlayed = Math.min(...playingToday.map(p => p.played || 0));
-          let highestRested = Math.max(...playingToday.map(p => p.rested || 0));
-          playersData[playerIndex].played = lowestPlayed;
-          playersData[playerIndex].rested = highestRested;
+          let highestRested = Math.max(...playingToday.map(p => p.rested || 1));
+          // NEW: Calculate number of players with alloted=2
+          const allotedTwoCount = playingToday.filter(p => p.alloted === 2).length;
+          playersData[playerIndex].played = allotedTwoCount === 0 
+            ? (lowestPlayed - 1) 
+            : lowestPlayed;
+          playersData[playerIndex].rested = Math.max(1, highestRested);  //MODIFIED to make sure the value is never less than 1
+          // console.log(`Updated played and rested values for player`);
         } else {
           playersData[playerIndex].played = 0;
-          playersData[playerIndex].rested = 0;
+          playersData[playerIndex].rested = 1;
+          // console.log(`Initialized played and rested values for player`);
         }
 
         playingToday.push({
@@ -81,32 +118,47 @@ function togglePlayerNumber(playerName, playerDiv) {
           name: playerName,
           number: numberToAssign,
           played: playersData[playerIndex].played,
-          rested: playersData[playerIndex].rested
+          rested: playersData[playerIndex].rested,
+          alloted: playersData[playerIndex].alloted
         });
+        // console.log(`Added player to playingToday`);
       }
     } else {
       alert("All numbers are already allocated.");
       return;
     }
   } else {
+    // console.log(`playerInfo[${playerName}].number is NOT null - Removing number`);
+
     let removedNumber = playerInfo[playerName].number;
+    // console.log(`Removing number: ${removedNumber}`);
     playDayConfig.removedNumbers.push(removedNumber);
     playDayConfig.removedNumbers.sort((a, b) => a - b);
     playerInfo[playerName].number = null;
+    // console.log(`Set playerInfo[${playerName}].number to null`);
+
     if (playerIndex !== -1) {
       playersData[playerIndex].PlayingToday = 0;
+      // console.log(`Set playersData[${playerIndex}].PlayingToday to 0`);
       TOTALPLAYERS--;
-      playersData[playerIndex].alloted -= 1;
+      // console.log(`Decremented TOTALPLAYERS to ${TOTALPLAYERS}`);
+      playersData[playerIndex].alloted -= 1; // Decrement alloted when removing
+      // console.log(`Decremented playersData[${playerIndex}].alloted to ${playersData[playerIndex].alloted}`);
       playingToday = playingToday.filter(player => player.name !== playerName);
+      // console.log(`Removed player from playingToday`);
     }
   }
 
   localStorage.setItem('clubmembers', JSON.stringify(playersData));
+  // console.log(`Updated clubmembers in localStorage:`, playersData);
   localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
+  // console.log(`Updated PlayDayConfig in localStorage:`, playDayConfig);
   localStorage.setItem('PlayingToday', JSON.stringify(playingToday));
-  updateTotalPlayersDisplay();
-}
+  // console.log(`Updated PlayingToday in localStorage:`, playingToday);
 
+  updateTotalPlayersDisplay();
+  // console.log(`Finished togglePlayerNumber for player: ${playerName}`);
+}
 
 
 // Function to update the display of TOTALPLAYERS (if needed)
@@ -151,7 +203,7 @@ function resetPlayers() {
   let playersData = JSON.parse(localStorage.getItem('clubmembers')) || [];
   playersData.forEach(player => {
     player.PlayingToday = 0; // Reset playingToday for all players
-    player.alloted = 0; // Reset alloted count for all players
+   // player.alloted = 0; // Reset alloted count for all players  <--- REMOVE or COMMENT THIS LINE
   });
   localStorage.setItem('clubmembers', JSON.stringify(playersData));
 }
@@ -183,16 +235,6 @@ function scrollToLetter(letter) {
   }
 }
 
-// Filter players based on search input
-//function filterPlayers() {
-//  const searchInput = document.getElementById('searchBar').value.toLowerCase();
-//  const players = document.getElementsByClassName('player-div');
-  
-//  for (let player of players) {
-//    const playerName = player.textContent.toLowerCase();
-//    player.style.display = playerName.includes(searchInput) ? '' : 'none';
-//  }
-//}
 
 function filterPlayers() {
   const searchInput = document.getElementById('searchBar').value.toLowerCase();
@@ -233,70 +275,16 @@ function filterPlayers() {
 }
 
 
-// Modify the displayPlayers function
-//function displayPlayers(players) {
-//  const playerListDiv = document.getElementById('playerList');
-//  playerListDiv.innerHTML = '';
-//  
-//  players.sort((a, b) => a.Player.localeCompare(b.Player));
-//  
-//  players.forEach(player => {
-//    const playerDiv = document.createElement('div');
-//    playerDiv.classList.add('player-div');
-//    playerDiv.onclick = () => togglePlayerNumber(player.Player, playerDiv);
-//    playerDiv.innerText = player.Player;
-//    playerDiv.id = `player-${player.Player.replace(/\s+/g, '-')}`;
-//    playerListDiv.appendChild(playerDiv);
-//    
-//    if (player.PlayingToday > 0) {
-//      createNumberBubble(playerDiv, player.PlayingToday);
-//      playerInfo[player.Player] = { ...player, number: player.PlayingToday };
-//    } else {
-//      playerInfo[player.Player] = { ...player, number: null };
-//    }
-//  });
-//  
-//  TOTALPLAYERS = players.filter(player => player.PlayingToday > 0).length;
-//  updateTotalPlayersDisplay();
-//}
 
 // Add event listeners
 document.addEventListener('DOMContentLoaded', () => {
   loadPlayers();
   createAlphabetScrollBar();
   document.getElementById('searchBar').addEventListener('input', filterPlayers);
-//  document.getElementById('playerModal').style.display = "block"; // ADD THIS LINE
+  document.getElementById('playerModal').style.display = "block"; // ADD THIS LINE
+
 });
 
-// Display loaded players on the UI
-//function displayPlayers(players) {
-//  const playerButtonsDiv = document.getElementById('playerButtons');
-//  playerButtonsDiv.innerHTML = '';
-//  console.log(`Displaying ${players.length} players`);
-//  players.forEach(player => {
-//    const playerDiv = document.createElement('div');
-//    playerDiv.classList.add('player-div');
-//    playerDiv.onclick = () => togglePlayerNumber(player.Player, playerDiv);
-//    // Display player's name in the UI
-//    playerDiv.innerText = `${player.Player}`;
-//    // Set a unique ID for each player's div element.
-//    playerDiv.id = `player-${player.Player.replace(/\s+/g, '-')}`;
-//    // Append the created div to the parent container.
-//    playerButtonsDiv.appendChild(playerDiv);
-//    // Check if the current player's PlayingToday value is greater than zero and create a bubble accordingly.
-//    if (player.PlayingToday > 0) {
-//      createNumberBubble(playerDiv, player.PlayingToday);
-//      // Update the player's info in the global object with their assigned number.
-//      playerInfo[player.Player] = { ...player, number: player.PlayingToday };
-//    } else {
-//      // If not playing today, set their number to null.
-//      playerInfo[player.Player] = { ...player, number: null };
-//    }
-//  });
-//  // Update TOTALPLAYERS count based on how many are playing today.
-//  TOTALPLAYERS = players.filter(player => player.PlayingToday > 0).length;
-//  updateTotalPlayersDisplay(); // Update the displayed total.
-//}
 function displayPlayers(players) {
   const playerListDiv = document.getElementById('playerList');
   playerListDiv.innerHTML = '';

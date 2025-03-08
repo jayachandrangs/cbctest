@@ -30,37 +30,48 @@
 </div>
 
 <script>
-    // Get the modal
-    var modal = document.getElementById("playerModal");
-
-    // Get the button that opens the modal (you'll need to create this button in your main page)
-    // var btn = document.getElementById("myBtn");
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks the button, open the modal
-    // btn.onclick = function() {
-    //     modal.style.display = "block";
-    // }
-
-    // Function to open the modal (call this from your main page)
-    function openModal() {
-        modal.style.display = "block";
+console.log('[MODAL] Opener exists:', !!window.opener);
+console.log('[MODAL] Opener closed status:', window.opener?.closed);
+    // Modified notifyParent function
+    function notifyParent() {
+        console.log('[MODAL] Attempting to notify parent...');
+        try {
+            if (window.opener && !window.opener.closed) {
+                console.log('[MODAL] Parent window found, sending message');
+                window.opener.postMessage(
+                    { 
+                        type: 'updateRestedPlayers',
+                        timestamp: Date.now() 
+                    }, 
+                    window.location.origin // Strict origin check
+                );
+            } else {
+                console.warn('[MODAL] No parent window available');
+            }
+        } catch (error) {
+            console.error('[MODAL] Message sending failed:', error);
+        } finally {
+            window.close();
+        }
     }
 
-    // When the user clicks on <span> (x), close the modal
+    // Modified close handlers
     span.onclick = function() {
+        console.log('[MODAL] X button clicked');
         modal.style.display = "none";
+        setTimeout(notifyParent, 100); // Give DOM time to update
     }
 
-    // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target === modal) {
+            console.log('[MODAL] Background click detected');
             modal.style.display = "none";
+            setTimeout(notifyParent, 100); // Give DOM time to update
         }
     }
 </script>
+
+
 <script src="MidSessionSelectedPlayers.js" defer></script>
 </body>
 </html>

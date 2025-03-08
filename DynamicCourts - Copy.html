@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<!-- DynamicCourts.html-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Court Session Manager</title>
+    <link rel="stylesheet" href="DynamicCourts.css">
+    <link rel="stylesheet" href="MidSessionSelectedPlayers.css">
+    <style>
+        /* Basic styling for the modal overlay (if not already in DynamicCourts.css) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            position: relative; /* Required for close button positioning */
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+
+        @keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div id="session-number">Session 1</div>
+        <div id="timer">00:00</div>
+        <div>
+            Session Duration: <input type="number" id="duration-input"> minutes
+        </div>
+
+        <!-- Players Icon and Modal -->
+        <div style="position: relative;">
+            <button class="header-btn" id="players-icon">&#128100; Players</button>
+        </div>
+
+        <!-- Settings Icon and Dropdown -->
+        <div style="position: relative;">
+            <button class="header-btn" id="setting-icon">&#9881; Settings</button>
+            <div id="setting-buttons" class="settings-dropdown">
+                <button class="header-btn" id="pause-btn">Pause</button>
+                <button class="header-btn" id="reset-btn">Reset</button>
+                <button class="header-btn" id="next-btn">Next</button>
+                <button class="header-btn" id="prev-btn">Prev</button>
+                <button class="header-btn" id="reshuffle-btn">Reshuffle</button>
+<!--                <button class="header-btn">Help</button> -->
+<!--                <button class="header-btn">Info</button> -->
+            </div>
+        </div>
+    </div>
+
+    <div id="content"></div>
+    <div id="content"></div>
+    <div id="rested-players">
+        <h3>Rested Players</h3>
+        <div class="players-container"></div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="playerModal" class="modal player-selection-modal">
+        <div class="modal-content teal-bg">
+            <span class="close">&times;</span>
+            <div class="center-content">
+                <div class="search-container">
+                    <input type="text" id="searchBar" placeholder="Search players...">
+                </div>
+                <div id="playerList" class="responsive-grid"></div>
+            </div>
+            <div id="alphabetScrollBar"></div>
+            <div class="bottom-buttons">
+               <!-- <button class="button" onclick="confirmAllocation()">CONFIRM</button>-->
+            </div>
+        </div>
+    </div>
+
+ <script src="DynamicCourts.js"></script>
+ <script src="MidSessionSelectedPlayers.js"></script>
+ <script>
+    console.log('[PARENT] Window origin:', window.location.origin);
+
+    // Get the modal
+    var modal = document.getElementById("playerModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("players-icon");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+         // Force style recalculation with a small delay
+        setTimeout(() => {
+          modal.style.opacity = 1;  // Or any other style change
+        }, 10);
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+</body>
+
+</html>

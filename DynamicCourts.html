@@ -101,9 +101,11 @@
         </div>
     </div>
 
+    <div id="loading-indicator" style="display: none;">Loading... Please wait.</div>
+
     <script src="DynamicCourts.js"></script>
     <script src="MidSessionSelectedPlayers.js"></script>
-    <script>
+<script>
         // Safely get elements
         const playerModal = document.getElementById('playerModal');
         const courtModal = document.getElementById('courtModal');
@@ -127,19 +129,28 @@
         // Courts Modal Handling
         document.getElementById('courts-icon').addEventListener('click', () => {
             courtModal.style.display = "flex";
-            document.getElementById('courtConfigFrame').contentWindow.location.reload();
+            //document.getElementById('courtConfigFrame').contentWindow.location.reload();
         });
 
         if(courtClose) {
-            courtClose.onclick = () => {
+           courtClose.onclick = () => {
                 courtModal.style.display = "none";
                 console.log('[COURTS] Modal closed via X button');
-                window.location.reload();
+
+                // Delay the check for 'PlayDayConfig:winreload'
+                setTimeout(() => {
+                   const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+                   if (config && config.winreload === 1) {
+                     config.winreload = 0;
+                     localStorage.setItem('PlayDayConfig', JSON.stringify(config));
+                     window.location.reload();
+                   }
+                }, 200); // 200ms delay
             };
         }
 
         // Background Click Handling
-        window.onclick = function(event) {
+       window.onclick = function(event) {
             if(event.target === playerModal) {
                 playerModal.style.display = "none";
                 console.log('[PLAYERS] Modal closed via background');
@@ -148,9 +159,24 @@
             if(event.target === courtModal) {
                 courtModal.style.display = "none";
                 console.log('[COURTS] Modal closed via background');
-                window.location.reload();
+                 // Delay the check for 'PlayDayConfig:winreload'
+                setTimeout(() => {
+                   const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+                   if (config && config.winreload === 1) {
+                     config.winreload = 0;
+                     localStorage.setItem('PlayDayConfig', JSON.stringify(config));
+                     window.location.reload();
+                   }
+                }, 200); // 200ms delay
             }
         };
+
+        // Reset PlayDayConfig:winreload to 0 after reload (ensure it only runs once)
+        if (localStorage.getItem('PlayDayConfig:winreload') === '1') {
+            localStorage.setItem('PlayDayConfig:winreload', '0');
+            console.log("PlayDayConfig:winreload reset to 0 after reload.");
+        }
+
     </script>
 </body>
 </html>

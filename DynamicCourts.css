@@ -270,7 +270,7 @@
         }
 
         .modal.show {
-            display: block;
+            display: none;
         }
 
         .player-separator {

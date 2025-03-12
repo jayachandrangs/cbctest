@@ -1,14 +1,20 @@
+// DynamicCourts.js - Integrated PlayDayConfig Functionality
+
 let currentSession;
 let timerInterval;
 let totalSeconds;
 let sessionDuration;
 let isPaused = false;
 
+// ************************************************************************
+// PlayDayConfig Variables and Functions (from MidSessionPlayDayConfig.js)
+// ************************************************************************
+
 // Initialize PlayDayConfig from localStorage or use default values
 let PlayDayConfig = JSON.parse(localStorage.getItem('PlayDayConfig')) || {
     courts: ['Court1', 'Court2', 'Court3', 'Court4', 'Court5', 'Court6'],
     ncourts: 6,
-    pdb: '123list.csv',
+    pdb: 'playerlist.csv',
     nsession: '5',
     sduration: '15',
     S1: 'Basic1',
@@ -20,10 +26,7 @@ let PlayDayConfig = JSON.parse(localStorage.getItem('PlayDayConfig')) || {
     S7: 'MixedDiv3',
     S8: 'MixedDiv3',
     S9: 'Basic1',
-    S10: 'Basic2',
-    currentSession: 1,
-    numberToAssign: 0,
-    winreload: 1,
+    S10: 'Basic2'
 };
 
 let selectedCourts = PlayDayConfig.courts;
@@ -62,93 +65,41 @@ function updateSessionAllocation(select, session) {
     updateConfig();
 }
 
-// Function to show the courts modal
-function showCourtsModal() {
-    const modal = document.getElementById('courtModal');
-    if (modal) {
-        modal.style.display = 'block';
-        // Refresh iframe content
-        document.getElementById('courtConfigFrame').contentWindow.location.reload();
-    }
-}
+    // Function to show the courts modal
+   function showCourtsModal() {
+       const modal = document.getElementById('courtModal');
+       if (modal) {
+           modal.style.display = 'block';
+           // Refresh iframe content
+           document.getElementById('courtConfigFrame').contentWindow.location.reload();
+       }
+   }
 
-function forcePause() {
-    if (!isPaused) {
-        // If not already paused, toggle it
-        togglePause();
-    }
-}
 
-//function setPlayDayConfig() {
-//    let playDayConfig = JSON.parse(localStorage.getItem('PlayDayConfig')) || {};
-//setTimeout(() => {
-//    // Directly assign values to the existing playDayConfig object
-//    playDayConfig.numberToAssign = 0;
-//    playDayConfig.courts = ['Court1', 'Court2', 'Court3', 'Court4', 'Court5', 'Court6'];
-//    playDayConfig.ncourts = 6;
-//    playDayConfig.pdb = '222yerlist.csv';
-//    playDayConfig.nsession = '5';
-//    playDayConfig.sduration = '15';
-//    playDayConfig.S1 = 'Basic1';
-//    playDayConfig.S2 = 'Basic2';
-//    playDayConfig.S3 = 'MixedDiv1';
-//    playDayConfig.S4 = 'MixedDiv2';
-//    playDayConfig.S5 = 'Basic3';
-//    playDayConfig.S6 = 'Basic4';
-//    playDayConfig.S7 = 'MixedDiv3';
-//    playDayConfig.S8 = 'MixedDiv3';
-//    playDayConfig.S9 = 'Basic1';
-//    playDayConfig.S10 = 'Basic2';
-//    playDayConfig.currentSession = 1;
-//    playDayConfig.winreload = 1;
-//
-//    localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
-//    }, 100);
-//}
+//  commitChanges function - Moved to DynamicCourts.js (from MidSessionPlayDayConfig.js)
 
 function setPlayDayConfig() {
-    // Create a new object instead of modifying the existing one
-    let playDayConfig = {
-        numberToAssign: 0,
-        courts: ['Court1', 'Court2', 'Court3', 'Court4', 'Court5', 'Court6'],
-        ncourts: 6,
-        pdb: '222yerlist.csv',
-        nsession: '5',
-        sduration: '15'
-    };
-    
-    // First batch of properties
-    requestAnimationFrame(() => {
-        localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
-        
-        // Second batch after a delay
-        setTimeout(() => {
-            playDayConfig.S1 = 'Basic1';
-            playDayConfig.S2 = 'Basic2';
-            playDayConfig.S3 = 'MixedDiv1';
-            playDayConfig.S4 = 'MixedDiv2';
-            playDayConfig.S5 = 'Basic3';
-            
-            requestAnimationFrame(() => {
-                localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
-                
-                // Third batch after another delay
-                setTimeout(() => {
-                    playDayConfig.S6 = 'Basic4';
-                    playDayConfig.S7 = 'MixedDiv3';
-                    playDayConfig.S8 = 'MixedDiv3';
-                    playDayConfig.S9 = 'Basic1';
-                    playDayConfig.S10 = 'Basic2';
-                    playDayConfig.currentSession = 1;
-                    playDayConfig.winreload = 1;
-                    
-                    requestAnimationFrame(() => {
-                        localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
-                    });
-                }, 100);
-            });
-        }, 100);
-    });
+    let playDayConfig = JSON.parse(localStorage.getItem('PlayDayConfig')) || {};
+    // Directly assign values to the existing playDayConfig object
+    playDayConfig.numberToAssign = 0;
+    playDayConfig.courts = ['Court1', 'Court2', 'Court3', 'Court4', 'Court5', 'Court6'];
+    playDayConfig.ncourts = 6;
+    playDayConfig.pdb = 'playerlist.csv';
+    playDayConfig.nsession = '5';
+    playDayConfig.sduration = '15';
+    playDayConfig.S1 = 'Basic1';
+    playDayConfig.S2 = 'Basic2';
+    playDayConfig.S3 = 'MixedDiv1';
+    playDayConfig.S4 = 'MixedDiv2';
+    playDayConfig.S5 = 'Basic3';
+    playDayConfig.S6 = 'Basic4';
+    playDayConfig.S7 = 'MixedDiv3';
+    playDayConfig.S8 = 'MixedDiv3';
+    playDayConfig.S9 = 'Basic1';
+    playDayConfig.S10 = 'Basic2';
+    playDayConfig.currentSession = 1;
+
+    localStorage.setItem('PlayDayConfig', JSON.stringify(playDayConfig));
 }
 
 async function covertdbtocsv() {
@@ -159,17 +110,15 @@ async function covertdbtocsv() {
         processCSVData(csvData);
     } catch (error) {
         console.error("CSV download failed:", error);
-
+        
         // Clean up PlayingToday
         if (localStorage.getItem('PlayingToday')) {
             localStorage.removeItem('PlayingToday');
         }
-
-        // Clean up clubmembers
+        // Clean up PlayingToday
         if (localStorage.getItem('clubmembers')) {
             localStorage.removeItem('clubmemebers');
         }
-
         // Handle clubmembers existence
         const clubmembers = localStorage.getItem('clubmembers');
         if (!clubmembers) {
@@ -186,6 +135,7 @@ async function covertdbtocsv() {
             rested: player.rested || 0
         }));
         localStorage.setItem('clubmembers', JSON.stringify(updatedClubmembers));
+        
         alert("Using cached data with reset allocations");
         reshuffle(currentSession);
         forcePause();
@@ -197,40 +147,36 @@ async function covertdbtocsv() {
     reshuffle(currentSession);
     forcePause();
     resetSession();
-    // window.location.href = 'DynamicCourts.html';
+//    window.location.href = 'DynamicCourts.html';
 }
 
+
+// processCSVData function - Moved to DynamicCourts.js (from MidSessionPlayDayConfig.js)
 function processCSVData(csvData) {
     localStorage.removeItem('clubmembers');
     localStorage.removeItem('PlayingToday');
-
     const rows = csvData.split('\n');
     if (rows.length < 2) {
         alert('The CSV file does not contain valid data.');
         return;
     }
-
     const clubmembers = [];
     const headers = rows[0].split(',');
-    // console.log("CSV Headers:", headers);
-
+    console.log("CSV Headers:", headers);
     const requiredHeaders = ['Player', 'Gender', 'Primary_Division', 'Secondary_Division'];
     const missingHeaders = requiredHeaders.filter(header => !headers.includes(header));
     if (missingHeaders.length > 0) {
         alert('The CSV file is missing required fields: ' + missingHeaders.join(', ') + '.');
         return;
     }
-
     rows.forEach((row, index) => {
         if (index > 0) {
             const columns = row.split(',');
-            // console.log("Parsing row:", columns);
-
+            console.log("Parsing row:", columns);
             if (columns.length < 4) {
                 alert('The CSV file does not contain all required fields for player: ' + (columns[0] || "Unknown") + '.');
                 return;
             }
-
             const player = {
                 Player: columns[0],
                 Gender: columns[1],
@@ -249,11 +195,10 @@ function processCSVData(csvData) {
             clubmembers.push(player);
         }
     });
-
     if (clubmembers.length > 0) {
         localStorage.setItem('clubmembers', JSON.stringify(clubmembers));
-        // alert('Changes committed successfully!');
-        // window.location.href = 'SelectedPlayers.html';
+//        alert('Changes committed successfully!');
+//        window.location.href = 'SelectedPlayers.html';
     } else {
         alert('No valid player data found in the CSV file.');
     }
@@ -262,7 +207,6 @@ function processCSVData(csvData) {
 // checkAndClearSessions function - Moved to DynamicCourts.js (from MidSessionPlayDayConfig.js)
 function checkAndClearSessions() {
     const sessionKeys = [
-        "Session_0", "Session_0_RestedPlayers",
         "Session_1", "Session_1_RestedPlayers",
         "Session_2", "Session_2_RestedPlayers",
         "Session_3", "Session_3_RestedPlayers",
@@ -275,102 +219,180 @@ function checkAndClearSessions() {
         "Session_10", "Session_10_RestedPlayers",
         "playerDataForMPlay"
     ];
-
     sessionKeys.forEach(key => {
         if (localStorage.getItem(key) !== null) {
             localStorage.removeItem(key);
         }
     });
+//    const PlayDayConfig = JSON.parse(localStorage.getItem("PlayDayConfig"));
+//    if (PlayDayConfig) {
+//        PlayDayConfig.numberToAssign = 1;
+//        PlayDayConfig.removedNumbers = [];
+//        PlayDayConfig.courts = ['Court1', 'Court2', 'Court3', 'Court4', 'Court5', 'Court6'];
+//        PlayDayConfig.ncourts = 6;
+//        PlayDayConfig.pdb ='playerlist.csv';
+//        PlayDayConfig.nsession = '5';
+//        PlayDayConfig.sduration = '15';
+//        PlayDayConfig.S1 = 'Basic1';
+//        PlayDayConfig.S2 = 'Basic2';
+//        PlayDayConfig.S3 = 'MixedDiv1';
+//        PlayDayConfig.S4 = 'MixedDiv2';
+//        PlayDayConfig.S5 = 'Basic3';
+//        PlayDayConfig.S6 = 'Basic4';
+//        PlayDayConfig.S7 = 'MixedDiv3';
+//        PlayDayConfig.S8 = 'MixedDiv3';
+//        PlayDayConfig.S9 = 'Basic1';
+//        PlayDayConfig.S10 = 'Basic2';
+//        localStorage.setItem("PlayDayConfig", JSON.stringify(PlayDayConfig));
+//    }
 }
 
-function reloadPage() {
-    window.location.href = "DynamicCourts.html";
+function sortCourts() {
+    PlayDayConfig.courts.sort();
+    selectedCourts = PlayDayConfig.courts;
 }
 
-async function initialize() {
-    console.log("The Start");
+function updateConfig() {
+    localStorage.setItem('PlayDayConfig', JSON.stringify(PlayDayConfig));
+}
 
-    document.addEventListener("DOMContentLoaded", async function() {
-        // Marked the callback function as async
-        console.log("The 2nd line");
+function loadValuesFromLocalStorage() {
+    const nsessionSelect = document.getElementById('nsession');
+    const sdurationSelect = document.getElementById('sduration');
 
-        const playerModal = document.getElementById('playerModal'); // Define playerModal
-        if (playerModal) {
+    if (PlayDayConfig.nsession) {
+        nsessionSelect.value = PlayDayConfig.nsession;
+    }
+
+    if (PlayDayConfig.sduration) {
+        sdurationSelect.value = PlayDayConfig.sduration;
+    }
+
+    for (let i = 1; i <= 10; i++) {
+        const sessionKey = `S${i}`;
+        if (PlayDayConfig[sessionKey]) {
+            const sessionSelect = document.getElementById(sessionKey);
+            if (sessionSelect) {
+                sessionSelect.value = PlayDayConfig[sessionKey];
+            }
+        }
+    }
+
+    if (PlayDayConfig.courts) {
+        const courtElements = document.querySelectorAll('.court');
+        courtElements.forEach(courtElement => {
+            const courtName = courtElement.textContent;
+            if (PlayDayConfig.courts.includes(courtName)) {
+                courtElement.classList.add('selected');
+            } else {
+                courtElement.classList.remove('selected');
+            }
+        });
+    }
+}
+
+// ************************************************************************
+// End PlayDayConfig Variables and Functions
+// ************************************************************************
+
+
+
+        // Add this at the TOP of DynamicCourts.js (outside any functions)
+        window.updateRestedHandler = function(event) {
+            console.log('[PARENT] Received message:', event.data);
+            if (event.data?.type === 'updateRestedPlayers') {
+                console.log('[PARENT] Triggering update');
+                updateRestedPlayersOnModalClose();
+            }
+        };
+
+        // Modify the existing message listener in initialize():
+        window.addEventListener('message', window.updateRestedHandler);
+
+
+    async function initialize() {
+        document.addEventListener("DOMContentLoaded", function() {
             playerModal.style.display = "none";
             playerModal.style.opacity = 0;
-        } else {
-            console.warn("playerModal not found in the DOM");
-        }
-
-        console.log("PlayDayconfig checking");
-
+    
+            //All event listeners go here
+            document.querySelector('.court-close').addEventListener('click', () => {
+            //    commitChanges();
+                window.location.reload();
+            });
+            // Event listeners for main buttons
+            document.getElementById('next-btn').addEventListener('click', goToNextSession);
+            document.getElementById('prev-btn').addEventListener('click', goToPreviousSession);
+            document.getElementById('reset-btn').addEventListener('click', resetSession);
+            document.getElementById('reshuffle-btn').addEventListener('click', function () {
+                reshuffle(currentSession);
+            });
+            // Double click event to toggle fullscreen
+            document.documentElement.addEventListener('dblclick', toggleFullScreen);
+            // Event listeners for main buttons
+            document.getElementById('next-btn').addEventListener('click', goToNextSession);
+            document.getElementById('prev-btn').addEventListener('click', goToPreviousSession);
+            document.getElementById('reset-btn').addEventListener('click', resetSession);
+            document.getElementById('reshuffle-btn').addEventListener('click', function () {
+                reshuffle(currentSession);
+            });
+            // Event listener for pause button
+            const pauseBtn = document.getElementById('pause-btn');
+            pauseBtn.addEventListener('click', togglePause);
+            // Event listener for setting icon
+            const settingIcon = document.getElementById('setting-icon');
+            settingIcon.addEventListener('click', toggleSettingButtons);
+        };
+    
+        // The rest of your initialize() function...
+        // Check if PlayDayConfig exists in local storage
+        console.log("Player Modal Display:", playerModal.style.display);
         if (!localStorage.getItem('PlayDayConfig')) {
+            // Load the courts modal (assuming you have a function to do this)
             checkAndClearSessions();
-            // setPlayDayConfig();
-            console.log("PlayDayconfig completed");
-
-            // Show loading indicator
-            document.getElementById('loading-indicator').style.display = 'block'; // Make sure you have an element with id="loading-indicator"
+            setPlayDayConfig();
             try {
                 await covertdbtocsv(); // Wait for CSV data to be processed
-                await showCourtsModal(); // Replace with your actual function call
-                await reloadPage();
+                showCourtsModal(); // Replace with your actual function call
             } catch (error) {
-                console.error("PlayDayconfig completed", error);
-                return;
+                console.error("Initialization failed:", error);
+                // Handle the error appropriately (e.g., display an error message)
+                return; // Stop further initialization if CSV loading fails
             }
-            return;
+            return; // Exit the initialize function to prevent further execution until the modal is handled
         }
-
         if (localStorage.getItem('PlayDayConfig')) {
             const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-            console.log("PlayDayconfig there and currentsession too");
             if (config.currentSession) {
-                currentSession = parseInt(config.currentSession, 10); // Parse to integer
+                currentSession = config.currentSession;
             }
         }
-
+        // If currentSession is still undefined or invalid, create a new session
         if (typeof currentSession === 'undefined' || currentSession === null || currentSession < 1) {
             console.log('currentsession checked if it is ZERO');
             checkAndClearSessions();
-            forcePause();
-            store0to1CurrentSession();  // Update localStorage immediately
             try {
                 await covertdbtocsv(); // Wait for CSV data to be processed
-                await showCourtsModal(); // Replace with your actual function call
-                await reloadPage();
-              //  forcePause();
+                showCourtsModal(); // Replace with your actual function call
             } catch (error) {
-              //  console.error("Initialization failed:", error);
-                return;
+                console.error("Initialization failed:", error);
+                // Handle the error appropriately (e.g., display an error message)
+                return; // Stop further initialization if CSV loading fails
             }
-            await createCurrentSession();
-            await PlayerAllocation(currentSession);
-            await loadSession(currentSession);
-            await startCountdown();
+            // return; // Exit the initialize function to prevent further execution until the modal is handled
+            createCurrentSession();
+            PlayerAllocation(currentSession);
         }
-     
-           console.log("Final currentSession value:", currentSession); // ADD THIS LINE!!!
-        if (currentSession > 0) { // Changed typeof check
-            console.log('currentsession checked if it is more than 0');
-            loadSession(currentSession);
-            startCountdown();
-            forcePause();
-        } else {
-            console.warn("currentSession is NOT greater than 0:", currentSession); // Debug
-        }
-
         // Keep screen on
         if ('wakeLock' in navigator) {
             navigator.wakeLock.request('screen')
                 .then(lock => {
-                    console.log('Screen wake lock acquired:', lock);
+                    // console.log('Screen wake lock acquired:', lock);
                 })
                 .catch(err => console.error('Failed to acquire wake lock:', err));
         } else {
-            console.warn('Wake Lock API not supported.');
+            // console.warn('Wake Lock API not supported.');
         }
-
         // Fullscreen
         if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen();
@@ -384,23 +406,17 @@ async function initialize() {
             /* IE/Edge */
             document.documentElement.msRequestFullscreen();
         }
-
         // Hide address bar
         window.scrollTo(0, 1);
         screen.orientation.lock("landscape");
         initializeLocalStorage();
-
-        // Call PlayerAllocation here, passing currentSession as SessionID
-        // PlayerAllocation(currentSession);
-        // loadSession(currentSession);
-        // startCountdown();
+        loadSession(currentSession);
+        startCountdown();
         setInterval(fiveMinuteBeep, 300000);
-
         const durationInput = document.getElementById('duration-input');
         const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
         durationInput.value = config.sduration;
-
-        durationInput.addEventListener('change', function() {
+        durationInput.addEventListener('change', function () {
             const newDuration = parseInt(this.value);
             if (!isNaN(newDuration) && newDuration > 0) {
                 updateSessionDuration(newDuration);
@@ -409,83 +425,41 @@ async function initialize() {
                 this.value = config.sduration;
             }
         });
-
-        // Event listeners for main buttons
-        document.getElementById('next-btn').addEventListener('click', goToNextSession);
-        document.getElementById('prev-btn').addEventListener('click', goToPreviousSession);
-        document.getElementById('reset-btn').addEventListener('click', resetSession);
-        document.getElementById('reshuffle-btn').addEventListener('click', function() {
-            reshuffle(currentSession);
-        });
-
-        // Event listener for pause button
-        const pauseBtn = document.getElementById('pause-btn');
-        pauseBtn.addEventListener('click', togglePause);
-
-        // Event listener for setting icon
-        const settingIcon = document.getElementById('setting-icon');
-        settingIcon.addEventListener('click', toggleSettingButtons);
-
-        // Double click event to toggle fullscreen
-        document.documentElement.addEventListener('dblclick', toggleFullScreen);
-    });
-}
-
-function initializeLocalStorage() {
-    if (!localStorage.getItem('PlayDayConfig')) {
-        const defaultConfig = {
-            courts: ['Court1', 'Court2', 'Court3', 'Court4', 'Court5', 'Court6'],
-            ncourts: 6,
-            pdb: '333rlist.csv',
-            nsession: 5,
-            sduration: 15,
-            S1: 'Basic1',
-            S2: 'Basic2',
-            S3: 'MixedDiv1',
-            S4: 'MixedDiv2',
-            S5: 'Basic3',
-            S6: 'Basic4',
-            S7: 'MixedDiv3',
-            S8: 'MixedDiv3',
-            S9: 'Basic1',
-            S10: 'Basic2',
-            currentSession: 1,
-            winreload: 1,
-            courts: ["Court1", "Court2", "Court3", "Court4", "Court5", "Court6"]
-        };
-        localStorage.setItem('PlayDayConfig', JSON.stringify(defaultConfig));
     }
 
-    if (!localStorage.getItem('Session_1')) {
-        const defaultPlayers = [
-            ["Player11", "Player12", "Player13", "Player14"],
-            ["Player21", "Player22", "Player23", "Player24"],
-            ["Player31", "Player32", "Player33", "Player34"],
-            ["Player41", "Player42", "Player42", "Player43"],
-            ["Player1", "Player2", "Player3", "Player4"],
-            ["Player5", "Player6", "Player7", "Player8"]
-        ];
-        localStorage.setItem('Session_1', JSON.stringify(defaultPlayers));
-        // localStorage.setItem('Session_1_RestedPlayers', JSON.stringify(["Reserve1", "Reserve2"]));
-    }
-}
 
-function loadSession(sessionNumber) {
-    const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-    const sessionData = JSON.parse(localStorage.getItem(`Session_${sessionNumber}`) || '[]');
-    const restedPlayers = JSON.parse(localStorage.getItem(`Session_${sessionNumber}_RestedPlayers`) || '[]');
+        //Add this on the initialize function
+        window.addEventListener('message', function(event) {
+            // Check the origin to prevent cross-site scripting attacks
+            //if (event.origin !== "http://example.com") return;
+        
+            // Check the structure of the message
+            if (event.data.type === 'updateRestedPlayers') {
+                // Call your function here
+                updateRestedPlayersOnModalClose();
+                // console.log('Received update notification - refreshed rested players');
+            }
+        }, false);
 
-    const courts = config.courts.map((courtName, index) => ({
-        courtname: courtName,
-        players: sessionData[index] || []
-    }));
-    renderCourts(courts);
-    renderRestedPlayers(restedPlayers);
-    sessionDuration = config.sduration * 60;
-    totalSeconds = sessionDuration;
-    updateTimerDisplay();
-    document.getElementById('session-number').textContent = `Session ${sessionNumber}`;
-}
+        function loadSession(sessionNumber) {
+            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+            const sessionData = JSON.parse(localStorage.getItem(`Session_${sessionNumber}`) || '[]');
+            const restedPlayers = JSON.parse(localStorage.getItem(`Session_${sessionNumber}_RestedPlayers`) || '[]');
+
+            const courts = config.courts.map((courtName, index) => ({
+                courtname: courtName,
+                players: sessionData[index] || []
+            }));
+
+            renderCourts(courts);
+            renderRestedPlayers(restedPlayers);
+
+            sessionDuration = config.sduration * 60;
+            totalSeconds = sessionDuration;
+            updateTimerDisplay();
+
+            document.getElementById('session-number').textContent = `Session ${sessionNumber}`;
+        }
 
         function renderCourts(courts) {
             const content = document.getElementById('content');
@@ -589,17 +563,18 @@ function loadSession(sessionNumber) {
         }
 
         function handleSessionEnd() {
-            console.log("Session end reached!");
+            // console.log("Session end reached!");
             playBeeps(1000);
             currentSession++;
             updateCurrentSession(currentSession);
-            PlayerAllocation(currentSession);
+             if (!localStorage.getItem(`Session_${currentSession}`)) {
+                PlayerAllocation(currentSession);
+                }
             const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
             if (currentSession > config.nsession) {
                 // Redirect to celebrations.html instead of showing an alert
                 playBeeps(1000);
                 currentSession = 0;
-                winreload = 1;
                 updateCurrentSession(currentSession);
                 // setTimeout(actionB, 10000);
                  window.location.href = 'celebrations.html';
@@ -654,7 +629,10 @@ function loadSession(sessionNumber) {
             if (currentSession < config.nsession) {
                 currentSession++;
                 updateCurrentSession(currentSession);
-                PlayerAllocation(currentSession);
+               // Check if Session_$currentSession exists
+                if (!localStorage.getItem(`Session_${currentSession}`)) {
+                   PlayerAllocation(currentSession);
+                   }
                 loadSession(currentSession);
                 startCountdown();
             }
@@ -685,6 +663,12 @@ function loadSession(sessionNumber) {
             const settingButtons = document.getElementById('setting-buttons');
             settingButtons.classList.toggle('show');
         }
+
+       function forcePause() {
+           if (!isPaused) {  // If not already paused, toggle it
+               togglePause();
+           }
+       }
 
         // Function to toggle fullscreen
         function toggleFullScreen() {
@@ -729,40 +713,10 @@ function loadSession(sessionNumber) {
                 case "MixedDiv2": MixedDiv2(SessionID); break;
                 case "MixedDiv3": MixedDiv3(SessionID); break;
                 case "MixedDiv4": MixedDiv4(SessionID); break;
-                default: console.log(`Unknown session type: ${sessionType}`);
+                default: // console.log(`Unknown session type: ${sessionType}`);
             }
         }
 
-        function updateRestedPlayersOnModalClose() {
-            //console.log('[PARENT] updateRestedPlayersOnModalClose called');
-            // 1. Get the current session number
-            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-            const currentSession = config.currentSession;
-        
-            // 2. Get the existing rested players from local storage.  Use an empty array as a default.
-            let restedPlayers = JSON.parse(localStorage.getItem(`Session_${currentSession}_RestedPlayers`) || '[]');
-        
-            // 3. Get the PlayingToday data from local storage
-            const playingToday = JSON.parse(localStorage.getItem('PlayingToday') || '[]');
-        
-            // 4. Filter PlayingToday to get players with alloted=2. Extract their names.
-            const newlyRestedPlayers = playingToday
-                .filter(player => player.alloted === 2)
-                .map(player => player.name); // Player objects have a 'name' property
-        
-            // 5. Add only the *new* rested players (those not already in the array)
-            newlyRestedPlayers.forEach(newPlayer => {
-                if (!restedPlayers.includes(newPlayer)) {
-                    restedPlayers.push(newPlayer);
-                }
-            });
-        
-            // 6. Save the updated restedPlayers array back to local storage
-            localStorage.setItem(`Session_${currentSession}_RestedPlayers`, JSON.stringify(restedPlayers));
-        
-            // 7. Call renderRestedPlayers to update the footer display
-            renderRestedPlayers(restedPlayers);
-        }
         
         function Simple1(SessionID) {
             allocatePlayers(SessionID, 'Primary_Division', 'highest');
@@ -1083,7 +1037,7 @@ function loadSession(sessionNumber) {
                  if (playerName) {
                      courtAllocation.push(playerName);
                  } else {
-                     console.log("No player selected");
+                     // console.log("No player selected");
                  }
                 }
                 sessionAllocation.push(courtAllocation);
@@ -1112,7 +1066,7 @@ function loadSession(sessionNumber) {
                  if (playerName) {
                      courtAllocation.push(playerName);
                  } else {
-                     console.log("No player selected");
+                     // console.log("No player selected");
                  }
                 }
                 sessionAllocation.push(courtAllocation);
@@ -1160,111 +1114,111 @@ function loadSession(sessionNumber) {
         }
         
         function selectPlayer(PlayingToday, divisionType, selectionType) {
-            //console.log("Function called with divisionType:", divisionType);
-            //console.log("PlayingToday length:", PlayingToday.length);
+            // console.log("Function called with divisionType:", divisionType);
+            // console.log("PlayingToday length:", PlayingToday.length);
             
             const availablePlayers = PlayingToday.filter(p => p.alloted === 0);
-            //console.log("Available players:", availablePlayers.length);
+            // console.log("Available players:", availablePlayers.length);
         
             if (availablePlayers.length === 0) {
-                console.log("No available players");
+                // console.log("No available players");
                 return null;
             }
         
             const validPlayers = availablePlayers.filter(p => {
                 const divisionProperty = Object.keys(p).find(key => key.toLowerCase() === divisionType.toLowerCase());
                 if (!divisionProperty) {
-                    console.log(`Division property not found for player ${p.Player}`);
+                    // console.log(`Division property not found for player ${p.Player}`);
                     return false;
                 }
                 const divValue = parseFloat(p[divisionProperty]);
-                console.log(`Player ${p.Player}, ${divisionProperty}: ${p[divisionProperty]}, parsed: ${divValue}`);
+                // console.log(`Player ${p.Player}, ${divisionProperty}: ${p[divisionProperty]}, parsed: ${divValue}`);
                 return !isNaN(divValue);
             });
-            //console.log("Valid players (with numeric division):", validPlayers.length);
+            // console.log("Valid players (with numeric division):", validPlayers.length);
         
             if (validPlayers.length === 0) {
-                console.log(`No players with valid numeric ${divisionType}`);
+                // console.log(`No players with valid numeric ${divisionType}`);
                 return null;
             }
         
             let maxDivision = Math.max(...validPlayers.map(p => parseFloat(p[divisionType])));
-            //console.log("Max division:", maxDivision);
+            // console.log("Max division:", maxDivision);
         
             let eligiblePlayers = validPlayers.filter(p => parseFloat(p[divisionType]) === maxDivision);
-            //console.log("Eligible players:", eligiblePlayers.length);
+            // console.log("Eligible players:", eligiblePlayers.length);
         
             if (eligiblePlayers.length === 0) {
-                console.log("No eligible players found");
+                // console.log("No eligible players found");
                 return null;
             }
         
             let player = eligiblePlayers[Math.floor(Math.random() * eligiblePlayers.length)];
             
             if (player) {
-                //console.log("Selected player:", player.Player);
+                // console.log("Selected player:", player.Player);
                 player.alloted = 1;
                 player.played++;
                 updatePlayerInLocalStorage(player);
-                //console.log("Returning player:", player.Player);
+                // console.log("Returning player:", player.Player);
                 return player.Player;
             } else {
-                console.log("Failed to select a player");
+                // console.log("Failed to select a player");
                 return null;
             }
         }
         
         function selectPlayerReverse(PlayingToday, divisionType, selectionType) {
-            //console.log("Function called with divisionType:", divisionType);
-            //console.log("PlayingToday length:", PlayingToday.length);
+            // console.log("Function called with divisionType:", divisionType);
+            // console.log("PlayingToday length:", PlayingToday.length);
             
             const availablePlayers = PlayingToday.filter(p => p.alloted === 0);
-            //console.log("Available players:", availablePlayers.length);
+            // console.log("Available players:", availablePlayers.length);
         
             if (availablePlayers.length === 0) {
-                console.log("No available players");
+                // console.log("No available players");
                 return null;
             }
         
             const validPlayers = availablePlayers.filter(p => {
                 const divisionProperty = Object.keys(p).find(key => key.toLowerCase() === divisionType.toLowerCase());
                 if (!divisionProperty) {
-                    console.log(`Division property not found for player ${p.Player}`);
+                    // console.log(`Division property not found for player ${p.Player}`);
                     return false;
                 }
                 const divValue = parseFloat(p[divisionProperty]);
-                console.log(`Player ${p.Player}, ${divisionProperty}: ${p[divisionProperty]}, parsed: ${divValue}`);
+                // console.log(`Player ${p.Player}, ${divisionProperty}: ${p[divisionProperty]}, parsed: ${divValue}`);
                 return !isNaN(divValue);
             });
-            //console.log("Valid players (with numeric division):", validPlayers.length);
+            // console.log("Valid players (with numeric division):", validPlayers.length);
         
             if (validPlayers.length === 0) {
-                console.log(`No players with valid numeric ${divisionType}`);
+                // console.log(`No players with valid numeric ${divisionType}`);
                 return null;
             }
         
             let minDivision = Math.min(...validPlayers.map(p => parseFloat(p[divisionType])));
-            //console.log("Min division:", minDivision);
+            // console.log("Min division:", minDivision);
         
             let eligiblePlayers = validPlayers.filter(p => parseFloat(p[divisionType]) === minDivision);
-            //console.log("Eligible players:", eligiblePlayers.length);
+            // console.log("Eligible players:", eligiblePlayers.length);
         
             if (eligiblePlayers.length === 0) {
-                console.log("No eligible players found");
+                // console.log("No eligible players found");
                 return null;
             }
         
             let player = eligiblePlayers[Math.floor(Math.random() * eligiblePlayers.length)];
             
             if (player) {
-                console.log("Selected player:", player.Player);
+                // console.log("Selected player:", player.Player);
                 player.alloted = 1;
                 player.played++;
                 updatePlayerInLocalStorage(player);
-                console.log("Returning player:", player.Player);
+                // console.log("Returning player:", player.Player);
                 return player.Player;
             } else {
-                console.log("Failed to select a player");
+                // console.log("Failed to select a player");
                 return null;
             }
         }
@@ -1280,16 +1234,16 @@ function loadSession(sessionNumber) {
         
         function storeAndPrintAllocation(SessionID, sessionAllocation, PlayDayConfig) {
             localStorage.setItem(`Session_${SessionID}`, JSON.stringify(sessionAllocation));
-            //console.log(`Session: ${SessionID}`);
+            // console.log(`Session: ${SessionID}`);
             
             // Print court allocations
             sessionAllocation.forEach((court, index) => {
-               // console.log(`Court ${PlayDayConfig.courts[index]}: ${court.join(', ')}`);
+                // console.log(`Court ${PlayDayConfig.courts[index]}: ${court.join(', ')}`);
             });
             
             // Print rested players
             const restedPlayers = JSON.parse(localStorage.getItem(`Session_${SessionID}_RestedPlayers`));
-            //console.log(`Rested Players: ${restedPlayers.join(', ')}`);
+            // console.log(`Rested Players: ${restedPlayers.join(', ')}`);
         
             // Update HTML output if needed
             const outputElement = document.getElementById('output');
@@ -1302,95 +1256,131 @@ function loadSession(sessionNumber) {
             }
         }
       
+         function createCurrentSession() {
+             if (localStorage.getItem('PlayDayConfig')) {
+                 const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+                 if ('currentSession' in config) {
+                     currentSession = config.currentSession;
+                     if (currentSession === 0) {
+                         currentSession = 1;
+                         config.currentSession = currentSession;
+                         localStorage.setItem('PlayDayConfig', JSON.stringify(config));
+                     }
+                 } else {
+                     currentSession = 1;
+                     config.currentSession = currentSession;
+                     localStorage.setItem('PlayDayConfig', JSON.stringify(config));
+                 }
+             } else {
+                 currentSession = 1;
+                 const defaultConfig = {
+                     currentSession: currentSession,
+                     nsession: 3,
+                     sduration: 45,
+                     courts: ["Court1", "Court2", "Court3", "Court4", "Court5", "Court6"]
+                 };
+                 localStorage.setItem('PlayDayConfig', JSON.stringify(defaultConfig));
+             }
+             // console.log('Current Session:', currentSession);
+         }
+         
+         function updateCurrentSession(newSessionValue) {
+             currentSession = newSessionValue;
+             storeCurrentSession();
+         }
+         
+         function storeCurrentSession() {
+             const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+             config.currentSession = currentSession;
+             localStorage.setItem('PlayDayConfig', JSON.stringify(config));
+         }
 
-function createCurrentSession() {
-    if (localStorage.getItem('PlayDayConfig')) {
-        const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-        if ('currentSession' in config) {
-            currentSession = config.currentSession;
-            if (currentSession === 0) {
-                currentSession = 1;
-                config.currentSession = currentSession;
-                localStorage.setItem('PlayDayConfig', JSON.stringify(config));
-            }
-        } else {
-            currentSession = 1;
-            config.currentSession = currentSession;
-            localStorage.setItem('PlayDayConfig', JSON.stringify(config));
+         function reshuffle(currentSession) {
+           try {
+             const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+             
+             // Update Player stats in PlayingToday
+             const PlayingToday = JSON.parse(localStorage.getItem('PlayingToday') || '[]');
+             
+             const updatedPlayingToday = PlayingToday.map(Player => {
+               if (Player.alloted === 2) {  // Note the spelling change here
+                 Player.rested = Math.max(0, Player.rested - 1);
+               } else if (Player.alloted === 1) {  // And here
+                 Player.played = Math.max(0, Player.played - 1);
+               }
+               Player.alloted = 0;  // Reset alloted for all players
+               return Player;
+             });
+             
+             // Save the updated PlayingToday back to localStorage
+             localStorage.setItem('PlayingToday', JSON.stringify(updatedPlayingToday));
+             
+             // Delete subsequent session data
+             let reshufSession = currentSession;
+             while (reshufSession <= config.nsession) {
+               localStorage.removeItem(`Session_${reshufSession}`);
+               localStorage.removeItem(`Session_${reshufSession}_RestedPlayers`);
+               reshufSession++;
+             }
+             
+             PlayerAllocation(currentSession);
+             loadSession(currentSession);
+             startCountdown();
+           } catch (error) {
+              console.error('Error in reshuffle function:', error);
+           }
+         }
+
+        function updateRestedPlayersOnModalClose() {
+            console.log('[PARENT] updateRestedPlayersOnModalClose called');
+            // 1. Get the current session number
+            const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
+            const currentSession = config.currentSession;
+        
+            // 2. Get the existing rested players from local storage.  Use an empty array as a default.
+            let restedPlayers = JSON.parse(localStorage.getItem(`Session_${currentSession}_RestedPlayers`) || '[]');
+        
+            // 3. Get the PlayingToday data from local storage
+            const playingToday = JSON.parse(localStorage.getItem('PlayingToday') || '[]');
+        
+            // 4. Filter PlayingToday to get players with alloted=2. Extract their names.
+            const newlyRestedPlayers = playingToday
+                .filter(player => player.alloted === 2)
+                .map(player => player.name); // Player objects have a 'name' property
+        
+            // 5. Add only the *new* rested players (those not already in the array)
+            newlyRestedPlayers.forEach(newPlayer => {
+                if (!restedPlayers.includes(newPlayer)) {
+                    restedPlayers.push(newPlayer);
+                }
+            });
+        
+            // 6. Save the updated restedPlayers array back to local storage
+            localStorage.setItem(`Session_${currentSession}_RestedPlayers`, JSON.stringify(restedPlayers));
+        
+            // 7. Call renderRestedPlayers to update the footer display
+            renderRestedPlayers(restedPlayers);
         }
-    } else {
-        currentSession = 1;
-        const defaultConfig = {
-            currentSession: currentSession,
-            nsession: 3,
-            sduration: 45,
-            courts: ["Court1", "Court2", "Court3", "Court4", "Court5", "Court6"]
-        };
-        localStorage.setItem('PlayDayConfig', JSON.stringify(defaultConfig));
+
+// Ensure the initialize function is called when the script loads
+initialize();
+
+    function updateSDuration(select) {
+        PlayDayConfig.sduration = select.value;
+        updateConfig();
     }
-    //console.log('Current Session:', currentSession);
-}
 
-function updateCurrentSession(newSessionValue) {
-    currentSession = newSessionValue;
-    storeCurrentSession();
-}
-
-function storeCurrentSession() {
-    const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-    config.currentSession = currentSession;
-    localStorage.setItem('PlayDayConfig', JSON.stringify(config));
-}
-
-function store0to1CurrentSession() {
-    console.log('starting store0to1CurrentSession');
-    const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-    config.currentSession = 1;
-    config.winreload = 1;
-    config.numberToAssign = 0;
-    localStorage.setItem('PlayDayConfig', JSON.stringify(config));
-    
-    // Verify the changes were made
-    const updatedConfig = JSON.parse(localStorage.getItem('PlayDayConfig'));
-    console.log('Updated config:', updatedConfig);
-    
-    // Force the currentSession variable to update
-    currentSession = updatedConfig.currentSession;
-}
-
-function reshuffle(currentSession) {
-    try {
-        const config = JSON.parse(localStorage.getItem('PlayDayConfig'));
-
-        // Update Player stats in PlayingToday
-        const PlayingToday = JSON.parse(localStorage.getItem('PlayingToday') || '[]');
-        const updatedPlayingToday = PlayingToday.map(Player => {
-            if (Player.alloted === 2) { // Note the spelling change here
-                Player.rested = Math.max(0, Player.rested - 1);
-            } else if (Player.alloted === 1) { // And here
-                Player.played = Math.max(0, Player.played - 1);
-            }
-            Player.alloted = 0; // Reset alloted for all players
-            return Player;
-        });
-
-        // Save the updated PlayingToday back to localStorage
-        localStorage.setItem('PlayingToday', JSON.stringify(updatedPlayingToday));
-
-        // Delete subsequent session data
-        let reshufSession = currentSession;
-        while (reshufSession <= config.nsession) {
-            localStorage.removeItem(`Session_${reshufSession}`);
-            localStorage.removeItem(`Session_${reshufSession}_RestedPlayers`);
-            reshufSession++;
+    function initializeLocalStorage() {
+        if (!localStorage.getItem('PlayDayConfig')) {
+            const defaultConfig = {
+                courts: ["Court1", "Court2", "Court3", "Court4", "Court5", "Court6"],
+                ncourts: 6,
+                nsession: 3,
+                sduration: 45,
+                currentSession: 1, // Add this
+                // Add other required properties from MidSessionPlayDayConfig.js
+            };
+            localStorage.setItem('PlayDayConfig', JSON.stringify(defaultConfig));
         }
-
-        PlayerAllocation(currentSession);
-        loadSession(currentSession);
-        startCountdown();
-    } catch (error) {
-        console.error('Error in reshuffle function:', error);
+        // Keep existing session initialization
     }
-}
-
-initialize(); // calling initialize function

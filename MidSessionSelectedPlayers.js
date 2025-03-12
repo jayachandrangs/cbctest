@@ -30,11 +30,11 @@ async function loadPlayers() {
       displayPlayers(players);
     } catch (error) {
       // console.error("Error parsing stored data:", error);
-      promptForCSVUpload();
+      // promptForCSVUpload();
     }
   } else {
     // console.log("No stored data found. Prompting for CSV upload.");
-    promptForCSVUpload();
+    // promptForCSVUpload();
   }
   isLoading = false;
 }

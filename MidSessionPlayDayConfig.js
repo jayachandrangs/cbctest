@@ -1,9 +1,9 @@
 let PlayDayConfig = JSON.parse(localStorage.getItem('PlayDayConfig')) || {
     courts: ['Court1', 'Court2', 'Court3', 'Court4', 'Court5', 'Court6'],
     ncourts: 6,
-    pdb: 'playerlist.csv',
-    nsession: '5',
-    sduration: '15',
+    pdb: '444rlist.csv',
+    nsession: 5,
+    sduration: 15,
     S1: 'Basic1',
     S2: 'Basic2',
     S3: 'MixedDiv1',
@@ -13,11 +13,21 @@ let PlayDayConfig = JSON.parse(localStorage.getItem('PlayDayConfig')) || {
     S7: 'MixedDiv3',
     S8: 'MixedDiv3',
     S9: 'Basic1',
-    S10: 'Basic2'
+    S10: 'Basic2',
+    currentSession: 1,
+    numberToAssign:0,
+    winreload: 1,
 };
 
 let selectedCourts = PlayDayConfig.courts;
 let ncourts = PlayDayConfig.ncourts;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize from PlayDayConfig
+    let selectedCourts = PlayDayConfig.courts;
+    let ncourts = PlayDayConfig.ncourts;
+    // Rest of initialization
+});
 
 function updateNSession(select) {
     PlayDayConfig.nsession = select.value;
@@ -170,32 +180,44 @@ function sortCourts() {
 
 document.addEventListener('DOMContentLoaded', function() {
     loadValuesFromLocalStorage();
+
     const courts = document.querySelectorAll('.court');
     courts.forEach(court => {
-        court.addEventListener('click', function() {
-            toggleCourt(court, court.textContent);
-        });
+        if(court){ //ADD THIS CHECK
+            court.addEventListener('click', function() {
+                toggleCourt(court, court.textContent);
+            });
+        }
     });
 
     const nsessionSelect = document.getElementById('nsession');
-    nsessionSelect.addEventListener('change', function() {
-        updateNSession(this);
-    });
-
-    const sdurationSelect = document.getElementById('sduration');
-    sdurationSelect.addEventListener('change', function() {
-        updateSDuration(this);
-    });
-
-    for (let i = 1; i <= 10; i++) {
-        const sessionSelect = document.getElementById(`S${i}`);
-        sessionSelect.addEventListener('change', function() {
-            updateSessionAllocation(this, `S${i}`);
+    if(nsessionSelect){ //ADD THIS CHECK
+        nsessionSelect.addEventListener('change', function() {
+            updateNSession(this);
         });
     }
 
+    const sdurationSelect = document.getElementById('sduration');
+    if(sdurationSelect){ //ADD THIS CHECK
+        sdurationSelect.addEventListener('change', function() {
+            updateSDuration(this);
+        });
+    }
+
+
+    for (let i = 1; i <= 10; i++) {
+        const sessionSelect = document.getElementById(`S${i}`);
+         if(sessionSelect){ //ADD THIS CHECK
+            sessionSelect.addEventListener('change', function() {
+                updateSessionAllocation(this, `S${i}`);
+            });
+         }
+    }
+
     const commitButton = document.getElementById('commit');
-    commitButton.addEventListener('click', commitChanges);
+     if(commitButton){ //ADD THIS CHECK
+        commitButton.addEventListener('click', commitChanges);
+     }
 
     // Initialize ncourts and selectedCourts based on the DOM
     ncourts = PlayDayConfig.courts.length; // Initialize ncourts from PlayDayConfig

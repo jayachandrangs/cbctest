@@ -167,7 +167,7 @@ async function covertdbtocsv() {
 
         // Clean up clubmembers
         if (localStorage.getItem('clubmembers')) {
-            localStorage.removeItem('clubmemebers');
+            localStorage.removeItem('clubmembers');
         }
 
         // Handle clubmembers existence
@@ -411,6 +411,7 @@ async function initialize() {
         });
 
         // Event listeners for main buttons
+        document.getElementById('FreshStart-btn').addEventListener('click', freshstart);
         document.getElementById('next-btn').addEventListener('click', goToNextSession);
         document.getElementById('prev-btn').addEventListener('click', goToPreviousSession);
         document.getElementById('reset-btn').addEventListener('click', resetSession);
@@ -821,7 +822,7 @@ function loadSession(sessionNumber) {
                 for (let i = 3; i <= 4; i++) {
                     if (availablePlayers.length > 0) {
                         let eligiblePlayers = [];
-                        for (let diff of [1.5, 1, 0.5, 0]) {
+                        for (let diff of [1, 1.5, 0]) {
                             eligiblePlayers = availablePlayers.filter(p => parseFloat(p.Primary_Division) === targetDivision - diff);
                             if (eligiblePlayers.length > 0) break;
                         }
@@ -894,7 +895,7 @@ function loadSession(sessionNumber) {
                 for (let i = 3; i <= 4; i++) {
                     if (availablePlayers.length > 0) {
                         let eligiblePlayers = [];
-                        for (let diff of [1.5, 1, 0.5, 0]) {
+                        for (let diff of [1, 1.5, 0]) {
                             eligiblePlayers = availablePlayers.filter(p => parseFloat(p.Primary_Division) === targetDivision + diff);
                             if (eligiblePlayers.length > 0) break;
                         }
@@ -964,7 +965,7 @@ function loadSession(sessionNumber) {
                 for (let i = 3; i <= 4; i++) {
                     if (availablePlayers.length > 0) {
                         let eligiblePlayers = [];
-                        for (let diff of [1.5, 1, 0.5, 0]) {
+                        for (let diff of [1, 1.5, 0]) {
                             eligiblePlayers = availablePlayers.filter(p => parseFloat(p.Secondary_Division) === targetDivision - diff);
                             if (eligiblePlayers.length > 0) break;
                         }
@@ -1034,7 +1035,7 @@ function loadSession(sessionNumber) {
                 for (let i = 3; i <= 4; i++) {
                     if (availablePlayers.length > 0) {
                         let eligiblePlayers = [];
-                        for (let diff of [1.5, 1, 0.5, 0]) {
+                        for (let diff of [1, 1.5, 0]) {
                             eligiblePlayers = availablePlayers.filter(p => parseFloat(p.Secondary_Division) === targetDivision + diff);
                             if (eligiblePlayers.length > 0) break;
                         }
@@ -1391,6 +1392,64 @@ function reshuffle(currentSession) {
     } catch (error) {
         console.error('Error in reshuffle function:', error);
     }
+}
+
+function freshstart() {
+        // Clean up PlayDayConfig
+        if (localStorage.getItem('PlayDayConfig')) {
+            localStorage.removeItem('PlayDayConfig');
+        }
+
+        // Clean up PlayingToday
+        if (localStorage.getItem('PlayingToday')) {
+            localStorage.removeItem('PlayingToday');
+        }
+
+        // Clean up clubmembers
+        if (localStorage.getItem('clubmembers')) {
+            localStorage.removeItem('clubmembers');
+        }
+        // Clean up Session1
+        if (localStorage.getItem('Session_1')) {
+            localStorage.removeItem('Session_1');
+        }
+        // Clean up Session1_re
+        if (localStorage.getItem('Session_1_RestedPlayers')) {
+            localStorage.removeItem('Session_1_RestedPlayers');
+        }
+        // Clean up Session2
+        if (localStorage.getItem('Session_2')) {
+            localStorage.removeItem('Session_2');
+        }
+        // Clean up Session1_re
+        if (localStorage.getItem('Session_2_RestedPlayers')) {
+            localStorage.removeItem('Session_2_RestedPlayers');
+        }
+        // Clean up Session2
+        if (localStorage.getItem('Session_3')) {
+            localStorage.removeItem('Session_3');
+        }
+        // Clean up Session1_re
+        if (localStorage.getItem('Session_3_RestedPlayers')) {
+            localStorage.removeItem('Session_3_RestedPlayers');
+        }
+        // Clean up Session2
+        if (localStorage.getItem('Session_4')) {
+            localStorage.removeItem('Session_4');
+        }
+        // Clean up Session1_re
+        if (localStorage.getItem('Session_4_RestedPlayers')) {
+            localStorage.removeItem('Session_4_RestedPlayers');
+        }
+        // Clean up Session2
+        if (localStorage.getItem('Session_5')) {
+            localStorage.removeItem('Session_5');
+        }
+        // Clean up Session1_re
+        if (localStorage.getItem('Session_5_RestedPlayers')) {
+            localStorage.removeItem('Session_5_RestedPlayers');
+        }
+ocation.href = "Index.html";
 }
 
 initialize(); // calling initialize function

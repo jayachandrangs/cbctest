@@ -151,14 +151,84 @@ function setPlayDayConfig() {
     });
 }
 
+async function loginAndDownloadCSV() {
+  const loginUrl = 'https://citywest-justclubs.onrender.com/api/auth/login';
+  const exportUrl = 'https://citywest-justclubs.onrender.com/api/volunteer/users/export';
+  const email = 'volunteer@justclubs.ie';
+  const password = '123456';
+  const maxRetries = 3;
+  const retryDelay = 30000; // 30 seconds
+
+  try {
+    // LOGIN STEP
+    console.log('[INFO] Attempting login...');
+    const loginPayload = { email, password };
+    const loginResponse = await fetch(loginUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(loginPayload)
+    });
+
+    if (!loginResponse.ok) {
+      const errTxt = await loginResponse.text();
+      console.error(`[ERROR] Login failed (HTTP ${loginResponse.status}):`, errTxt);
+      return;
+    }
+
+    const loginData = await loginResponse.json();
+    const token = loginData.token;
+    if (!token) {
+      console.error('[ERROR] Login response missing token:', loginData);
+      return;
+    }
+    console.log('[INFO] Login successful. Token received.');
+
+    // EXPORT STEP WITH RETRIES
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      console.log(`[INFO] Attempt ${attempt}: Downloading CSV export...`);
+      try {
+        const exportResponse = await fetch(exportUrl, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (exportResponse.ok) {
+          const csvData = await exportResponse.text();
+          console.log('[SUCCESS] CSV data received!');
+          // Optionally: console.log(csvData); // Uncomment to print full CSV
+          return csvData;
+        } else {
+          const errTxt = await exportResponse.text();
+          throw new Error(`[HTTP ${exportResponse.status}] ${errTxt}`);
+        }
+      } catch (exportErr) {
+        console.error(`[ERROR] Export attempt ${attempt} failed:`, exportErr.message);
+        if (attempt < maxRetries) {
+          console.log(`[INFO] Retrying in ${retryDelay / 1000} seconds...`);
+          await new Promise(res => setTimeout(res, retryDelay));
+        } else {
+          console.error(`[FAIL] All ${maxRetries} export attempts failed.`);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('[CRITICAL ERROR]', err);
+  }
+}
+
+
+
 async function covertdbtocsv() {
     try {
-        const response = await fetch("https://raw.githubusercontent.com/jayachandrangs/cbc/main/RiVi_playerlist.csv");
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const csvData = await response.text();
-        processCSVData(csvData);
-    } catch (error) {
-        console.error("CSV download failed:", error);
+         // Replace fetch with loginAndDownloadCSV call
+          const csvData = await loginAndDownloadCSV();
+        
+          if (!csvData) throw new Error('No CSV data received from loginAndDownloadCSV');
+        
+          processCSVData(csvData);
+        } catch (error) {
+          console.error("CSV download failed:", error);
+
 
         // Clean up PlayingToday
         if (localStorage.getItem('PlayingToday')) {
@@ -312,6 +382,7 @@ async function initialize() {
             // Show loading indicator
             document.getElementById('loading-indicator').style.display = 'block'; // Make sure you have an element with id="loading-indicator"
             try {
+                // await loginAndDownloadCSV();
                 await covertdbtocsv(); // Wait for CSV data to be processed
                 await showCourtsModal(); // Replace with your actual function call
                 await reloadPage();
@@ -1449,7 +1520,7 @@ function freshstart() {
         if (localStorage.getItem('Session_5_RestedPlayers')) {
             localStorage.removeItem('Session_5_RestedPlayers');
         }
-ocation.href = "Index.html";
+location.href = "Index.html";
 }
 
 initialize(); // calling initialize function
